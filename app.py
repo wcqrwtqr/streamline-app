@@ -4,6 +4,7 @@ from utils.mpfm_page import mpfm_page
 from utils.air_compressor_page import air_compressor_page
 from utils.pvt_page import pvt_page
 from utils.simulation_page import simulation_page
+from utils.nodal_page import nodal_page
 
 
 if __name__ == "__main__":
@@ -14,6 +15,7 @@ if __name__ == "__main__":
         "Air Supply": air_compressor_page,
         "PVT": pvt_page,
         "Simulation": simulation_page,
+        "Nodal": nodal_page,
     }
     # Get the string of pages
     page_name = st.sidebar.selectbox("Choose page", page_name_to_func.keys())
