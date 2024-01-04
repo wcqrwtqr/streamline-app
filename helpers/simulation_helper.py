@@ -20,6 +20,10 @@ def simulation_helper():
             env = simpy.Environment()
             env.process(setup(env, no_stations, loading_time, 10, no_trucks))
             env.run(until=duration * 60)
-            st.write(f"No of Trucks Filled.... {filter_main_list(main_list)}")
+            container = st.container(border=True)
+            container.write(
+                f"In the past {duration} hours **{filter_main_list(main_list)}** \
+                trucks were filled"
+            )
             st.table(main_list)
             clear_main_list()

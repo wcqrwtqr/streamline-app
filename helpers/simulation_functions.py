@@ -10,7 +10,7 @@ def clear_main_list():
 
 
 def filter_main_list(main_list):
-    filtered_data_out = list(filter(lambda x: "Out" in x.get("Status", ""), main_list))
+    filtered_data_out = list(filter(lambda x: "Out" in x.get("Status"), main_list))
     count_out_status = len(filtered_data_out)
     return count_out_status
 

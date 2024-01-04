@@ -27,18 +27,34 @@ def calculate_the_values_of_air(API_val, air_rate, oil_rate):
 
     if conv_oil != 0:
         air_oil_ratio = conv_air / conv_oil * 100
-        if 10 <= air_oil_ratio <= 20:
-            st.write(
-                f"At oil rate {oil_rate} and air rate of \
-                {air_rate} ratio is: {air_oil_ratio:.2f}% ✅"
-            )
-            return air_oil_ratio
+
+        if air_oil_ratio <= 10:
+            data = {
+                "Oil rate bpd": oil_rate,
+                "Air rate CFM": air_rate,
+                "Air ratio %": f"{air_oil_ratio:.2f}",
+                "Status": "🔻",
+                "Comment": "Under size",
+            }
+            return air_oil_ratio, data
+        elif air_oil_ratio >= 10 and air_oil_ratio <= 20:
+            data = {
+                "Oil rate bpd": oil_rate,
+                "Air rate CFM": air_rate,
+                "Air ratio %": f"{air_oil_ratio:.2f}",
+                "Status": "✅",
+                "Comment": "Suitable size",
+            }
+            return air_oil_ratio, data
         else:
-            st.write(
-                f"At oil rate {oil_rate} and air rate of \
-                    {air_rate} ratio is: {air_oil_ratio:.2f}% 🚫"
-            )
-            return air_oil_ratio
+            data = {
+                "Oil rate bpd": oil_rate,
+                "Air rate CFM": air_rate,
+                "Air ratio %": f"{air_oil_ratio:.2f}",
+                "Status": "🔺",
+                "Comment": "Over size",
+            }
+            return air_oil_ratio, data
 
 
 def air_compressor_helper():
@@ -52,11 +68,14 @@ def air_compressor_helper():
             y = []
             xy = []
             lis_x = list(range(200, 3200, 200))
+            data_collection = []
             for rate in range(len(lis_x)):
                 new_air_rate = air_rate + lis_x[rate]
-                x = calculate_the_values_of_air(API_val, new_air_rate, oil_rate)
+                x, data = calculate_the_values_of_air(API_val, new_air_rate, oil_rate)
                 y.append(x)
                 xy.append(new_air_rate)
+                data_collection.append(data)
+            st.table(data_collection)
             fig = px.scatter(x=xy, y=y, title="Air oil Ratio for optimum burning")
             fig.add_hrect(y0=10, y1=20, line_width=0, fillcolor="green", opacity=0.1)
             st.plotly_chart(fig)
