@@ -164,6 +164,7 @@ def IPR_vlp_curve(
     return fig
 
 
+# This will be used to present the needed data on the webpage
 def nodal_helper():
     with st.expander(label="Reservoir Inflow Behaviour - IPR Flow rates"):
         with st.form(key="file_form_nodalIPR"):

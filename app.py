@@ -5,6 +5,7 @@ from utils.air_compressor_page import air_compressor_page
 from utils.pvt_page import pvt_page
 from utils.simulation_page import simulation_page
 from utils.nodal_page import nodal_page
+from utils.conversion_page import conversion_page
 
 
 if __name__ == "__main__":
@@ -16,6 +17,7 @@ if __name__ == "__main__":
         "PVT": pvt_page,
         "Simulation": simulation_page,
         "Nodal": nodal_page,
+        "Conversion": conversion_page,
     }
     # Get the string of pages
     page_name = st.sidebar.selectbox("Choose page", page_name_to_func.keys())

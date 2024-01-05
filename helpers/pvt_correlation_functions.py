@@ -1,3 +1,5 @@
+import numpy as np
+
 """
 Codes for gas, oil, and water PVT correlations
 @author: Yohanes Nuwara
@@ -19,7 +21,6 @@ def gas_pseudoprops(temp, pressure, sg, x_h2s, x_co2):
       For range: x_h2s (mol%) < 0.738; x_co2 (mol%) < 0.544; 154 < p (psia) < 7026; 40 < temp (°F) < 300 (error 0.97%)
       (Wichert and Aziz, 1972)
     """
-    import numpy as np
 
     if (
         sg > 0.57
@@ -63,7 +64,6 @@ def gas_zfactor(T_pr, P_pr):
     # T_pr : calculated pseudoreduced temperature
     # P_pr : calculated pseudoreduced pressure
     from scipy.optimize import fsolve  # non-linear solver
-    import numpy as np
 
     if T_pr > 1 and T_pr < 3 and P_pr > 0.2 and P_pr < 30:
         a1 = 0.3265
@@ -156,7 +156,6 @@ def gas_mu(temp, rhogas, sg):
     For range: 100 < temp (°F) < 340; 0.9 < x_CO2 (mol%) < 3.2; x_N2 (mol%) < 4.8 (std 2.7-9.0%)
     (Lee et al, 1996)
     """
-    import numpy as np
 
     if temp > 100 and temp < 340:
         temp = temp + 459.67
@@ -180,7 +179,6 @@ def gas_compressibility(T_pr, P_pr, rho_pr, z, P_pc):
     For range: unspecified
     (Trube, 1957; Mattar, 1975)
     """
-    import numpy as np
 
     a1 = 0.3265
     a2 = -1.0700
@@ -223,7 +221,6 @@ def oil_pbubble(Rsb, sg2, api, temp2):
     For range: 20 < Rsb (scf/STB) < 2,070; 0.56 < sg < 1.18; 16 < api < 58; 70 < temp (°F) < 295 (err=0.7%)
     (Vazquez and Beggs, 1980)
     """
-    import numpy as np
 
     if (
         Rsb > 20
@@ -263,8 +260,6 @@ def oil_fvf(P_bubble, api, Rsb, sg2, temp2, pressure2):
       For range: unspecified
       (Levitan and Murtha, 1999)
     """
-
-    import numpy as np
 
     # FVF of oil at bubblepoint pressure using Levitan-Murtha
     so = 141.5 / (api + 131.5)
@@ -326,7 +321,6 @@ def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rs):
       (Vazquez and Beggs, 1980)
     """
     # Calculate viscosity of oil
-    import numpy as np
 
     mu_oil_array = []
 
@@ -416,7 +410,6 @@ def oil_compressibility(pressure2, P_bubble, temp2, api, Rsb, sg2):
       For range: unspecified
       (Vazquez and Beggs, 1980)
     """
-    import numpy as np
     from math import e
 
     # oil isothermal compressibility
@@ -455,7 +448,6 @@ def gasoilratio(pressure2, P_bubble, sg2, api, temp2, Rsb):
     * At and Above Bubble-Point
       Rs equals to Rs @ bubble-point pressure
     """
-    import numpy as np
 
     Rs_array = []
 
