@@ -10,6 +10,15 @@ Note:
 
 ** How to run the application
 
+#+begin_quote
+# Activiate the environment
+source .venv/bin/activate
+
+# Run the streamlit app
+streamlit run app.py
+
+#+end_quote
+
 #+begin_src bash
 # Activiate the environment
 source .venv/bin/activate
