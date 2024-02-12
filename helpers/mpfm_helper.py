@@ -139,7 +139,12 @@ def mpfm_data(source_file):
             "select one",
             ["coolwarm", "BuPu", "coolwarm_r", "magma", "magma_r", "tab10"],
         )
+
         fig, ax = plt.subplots()
-        ax = sns.heatmap(df_lst[selector].corr(), cmap=cmp, annot=True)
+        sns.heatmap(df_lst[selector].corr(), cmap=cmp, annot=True, ax=ax)
         st.pyplot(fig)
         st.plotly_chart(fig)
+        # fig, ax = plt.subplots()
+        # ax = sns.heatmap(df_lst[selector].corr(), cmap=cmp, annot=True)
+        # st.pyplot(fig)
+        # st.plotly_chart(fig)

@@ -1,0 +1,19 @@
+#+title: Readme
+
+
+* streamline-app
+A python and streamlit app for my oilfield operation support
+
+Note:
+- python version is 3.12.1
+- dependencies are listed in requirements.txt
+
+** How to run the application
+
+#+begin_src bash
+# Activiate the environment
+source .venv/bin/activate
+
+# Run the streamlit app
+streamlit run app.py
+#+end_src
