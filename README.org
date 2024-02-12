@@ -8,7 +8,7 @@ Note:
 - python version is 3.12.1
 - dependencies are listed in requirements.txt
 
-** How to run the application
+** How to run the application (virtual environment)
 
 #+begin_src bash
 # Activiate the environment
@@ -16,4 +16,17 @@ source .venv/bin/activate
 
 # Run the streamlit app
 streamlit run app.py
+#+end_src
+
+** How to run the application (Docker)
+
+#+begin_src bash
+# The first time use the following command
+docker-compose up --build
+
+# If you want to start the server again
+docker-compose up
+
+# To shut it down
+docker-compose down
 #+end_src
