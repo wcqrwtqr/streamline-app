@@ -5,8 +5,8 @@ from plotly.subplots import make_subplots
 
 
 def graphing_line_arg(df, x, st=st, *args):
-    """graphing_line_arg which accept a DataFrame and then can draw
-    as much y axes as much using the args option
+    """ graphing_line_arg is provided that takes in a DataFrame and allows for the drawing of multiple y axes through the use of the `args` argument. This feature enables you to create as many y axes as needed. Without quotes.
+
 
     Parameters
     ----------
