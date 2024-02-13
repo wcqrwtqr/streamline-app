@@ -6,6 +6,7 @@ from utils.pvt_page import pvt_page
 from utils.simulation_page import simulation_page
 from utils.nodal_page import nodal_page
 from utils.conversion_page import conversion_page
+from utils.gauges_page import gauges_page
 
 
 if __name__ == "__main__":
@@ -13,6 +14,7 @@ if __name__ == "__main__":
     page_name_to_func = {
         "Intro": intro,
         "MPFM": mpfm_page,
+        "Gauges": gauges_page,
         "Air Supply": air_compressor_page,
         "PVT": pvt_page,
         "Simulation": simulation_page,
