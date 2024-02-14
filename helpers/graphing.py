@@ -31,8 +31,14 @@ def graphing_line_arg(df, x, st=st, *args):
             fig_n.add_trace(
                 go.Scatter(x=df[x], y=df[col], mode="lines", name=col), secondary_y=bol
             )
-    if arg != []:
-        st.plotly_chart(fig_n)
-    else:
-        None
-        st.markdown("Select columns from the drop down list ☝🏼")
+        if arg:
+            st.plotly_chart(fig_n)
+        else:
+            st.markdown("Select columns from the drop down list ☝🏼")
+
+# OLD CODE also the indentaion
+    # if arg != []:
+    #     st.plotly_chart(fig_n)
+    # else:
+    #     None
+    #     st.markdown("Select columns from the drop down list ☝🏼")

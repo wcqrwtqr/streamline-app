@@ -108,7 +108,6 @@ def mpfm_data(source_file):
     graphing_line_arg(df_lst, "date_time", tab4, ["Std.OilFlowrate", "Std.GasFlowrate", "WaterFlowrate"])
     graphing_line_arg(df_lst, "date_time", tab5, ["WaterFlowrate", "Std.Watercut"])
 
-
     # making the average table along with a graph
     with st.expander(label="Average table"):
         avg_selection = st.multiselect("select parameter", header_list[2:-1])
@@ -144,7 +143,3 @@ def mpfm_data(source_file):
         sns.heatmap(df_lst[selector].corr(), cmap=cmp, annot=True, ax=ax)
         st.pyplot(fig)
         st.plotly_chart(fig)
-        # fig, ax = plt.subplots()
-        # ax = sns.heatmap(df_lst[selector].corr(), cmap=cmp, annot=True)
-        # st.pyplot(fig)
-        # st.plotly_chart(fig)

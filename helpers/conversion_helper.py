@@ -14,7 +14,7 @@ def bbl_to_other_units(bbl: int) -> Dict[str, float]:
 def conversion_helper():
     with st.expander("BBL/d to other units"):
         with st.form(key="bbl to other units"):
-            col1, col2 = st.columns(2)
+            col1, _ = st.columns(2)
             bbl = int(
                 col1.number_input(
                     "bbl/d",
