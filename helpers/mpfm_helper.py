@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from helpers.graphing import graphing_line_arg
+from helpers.handlers.graphing import graphing_line_arg
 
 
 def calculate_averages(df, columns):
@@ -120,6 +120,8 @@ def mpfm_data(source_file):
     # Showing the data set with the needed columns
     with st.expander(label="Data Set"):
         NN = st.selectbox("Interval", [1, 5, 10, 20, 30])
+        if NN is None:  # This code is to address int|None condition
+            NN = 1
         st.write("👈🏼 Add/Remove from the sidebar list")
         st.dataframe(df_lst2.loc[:: int(NN)])
         st.markdown(f"*Available Data: {df_lst2.loc[::int(NN)].shape[0]}")

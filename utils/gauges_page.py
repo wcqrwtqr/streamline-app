@@ -1,5 +1,6 @@
 import streamlit as st
-from helpers.gauges_helper import Gauges_data_Spartek, Gauges_data_Metrolog
+from helpers.spartek_gauges_helper import Gauges_data_Spartek
+from helpers.metrolog_gauges_helper import Gauges_data_Metrolog
 from PIL import Image
 import os
 
@@ -29,24 +30,25 @@ def gauges_spartek_page():
         Gauges_data_Spartek(source_data)
     except Exception:
         st.subheader("No Data available!!")
-        st.write("Select correct data for Metrolog gauges")
+        st.write("Select correct data for spartek gauges")
 
 
 def gauges_metrolog_page():
-        st.title("Down Hole Gauges _Metrolog_ 🌡")
-        st.markdown(
-            """
+    st.title("Down Hole Gauges _Metrolog_ 🌡")
+    st.markdown(
+        """
                     The below is to manipulate __METROLOG__ Down Hole Memory Gauges row data\n
                     The page can view the data, download the values after applying a reduction factor to excel
                     """
-        )
-        source_data = st.file_uploader(
-            label="Uplaod gauges data to web page", type=["csv", "log", "txt"]
-        )
-        st.write("---")
-        try:
-            # Execute the program
-            Gauges_data_Metrolog(source_data)
-        except Exception:
-            st.subheader("No Data available!!")
-            st.write("Select correct data for Metrolog gauges")
+    )
+    source_data = st.file_uploader(
+        label="Uplaod gauges data to web page", type=["csv", "log", "txt"]
+    )
+    st.write("---")
+    try:
+        # Execute the program
+        Gauges_data_Metrolog(source_data)
+    except Exception as e:
+        st.write("An error occured:" + str(e))
+        # st.subheader("No Data available!!")
+        # st.write("Select correct data for the gauges")

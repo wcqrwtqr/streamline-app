@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from helpers.pvt_correlation_functions import (
+from helpers.handlers.pvt_correlation_functions import (
     oil_compressibility,
     oil_pbubble,
     oil_fvf,

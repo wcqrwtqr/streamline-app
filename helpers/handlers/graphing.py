@@ -1,13 +1,10 @@
-import plotly.express as px
 import streamlit as st
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 
 
 def graphing_line_arg(df, x, st=st, *args):
-    """ graphing_line_arg is provided that takes in a DataFrame and allows for the drawing of multiple y axes through the use of the `args` argument. This feature enables you to create as many y axes as needed. Without quotes.
-
-
+    """graphing_line_arg is provided that takes in a DataFrame and allows for the drawing of multiple y axes through the use of the `args` argument. This feature enables you to create as many y axes as needed. Without quotes.
     Parameters
     ----------
     df : DataFrame
@@ -35,10 +32,3 @@ def graphing_line_arg(df, x, st=st, *args):
             st.plotly_chart(fig_n)
         else:
             st.markdown("Select columns from the drop down list ☝🏼")
-
-# OLD CODE also the indentaion
-    # if arg != []:
-    #     st.plotly_chart(fig_n)
-    # else:
-    #     None
-    #     st.markdown("Select columns from the drop down list ☝🏼")

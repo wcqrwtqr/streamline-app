@@ -1,6 +1,6 @@
 import streamlit as st
 import simpy
-from helpers.simulation_functions import (
+from helpers.handlers.simulation_functions import (
     setup,
     main_list,
     clear_main_list,

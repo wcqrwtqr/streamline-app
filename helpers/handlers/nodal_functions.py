@@ -291,7 +291,7 @@ def pwf_vogel(q_test, pwf_test, pr, qo, pb):
     Pwf at Different Conditions
     Qo: Oil Flow Rate of productivity test (bpd)
     AOF = Qomax : Absolute Open Flow (bpd)
-    Qb: Oil Flow Rate at Bubble Point (bpd)\J:Productivity Index (bpd/psi)
+    Qb: Oil Flow Rate at Bubble Point (bpd) J:Productivity Index (bpd/psi)
     Pr: Reservoir Pressure (psia) 𝑃𝑏
     Pb: Bubble Point Pressue 𝑃𝑤𝑓
     Pwf : Pressure Well Flowing (psia) 𝑃𝑤𝑓𝑡𝑒𝑠𝑡
