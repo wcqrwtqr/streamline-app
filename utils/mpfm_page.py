@@ -18,6 +18,5 @@ def mpfm_page():
     try:
         mpfm_data(source_data)
         col1, col2 = st.columns(2)
-    except Exception:
-        st.subheader("No data selected")
-        st.write("Select the correct data for the MPFM")
+    except Exception as e:
+        st.write("An error occured:" + str(e))

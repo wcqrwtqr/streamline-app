@@ -1,7 +1,13 @@
 import pandas as pd
 import streamlit as st
 from helpers.handlers.make_graphs import make_graphs, make_graphs_optimized
+from helpers.handlers.read_csv_gauges import (
+    read_csv_standard,
+    read_csv_chunck,
+    read_csv_concurrency,
+)
 import time
+from helpers.handlers.derived_pressure import calc_derivative_np
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -21,96 +27,10 @@ def load_df_metorlog(source_file, row: int):
     start_time = time.time()
 
     # OLD METHOD =================================================
-    """
-    df = pd.read_csv(
-        source_file,
-        sep="[,\t]",
-        header=None,
-        skiprows=row,
-        names=["date", "time", "pressure", "temperature"],
-        # parse_dates={"date_time_corrected": ["date", "time"]},
-        # date_parser=lambda x: pd.to_datetime(x, format="%d-%m-%y %H:%M:%S"),
-        engine="python",
-    )
 
-    df["date_time"] = df["date"] + " " + df["time"]
-    df["date_time_corrected"] = pd.to_datetime(
-        df["date_time"], format="%d-%m-%y %H:%M:%S"
-    )
-    """
-
-    # Chunk METHOD START =================================================
-    """
-    df = pd.DataFrame()
-
-    chunk_generator = pd.read_csv(
-        source_file,
-        sep="[,\t]",
-        header=None,
-        skiprows=row,
-        names=["date", "time", "pressure", "temperature"],
-        chunksize=10000,
-        # parse_dates={"date_time_corrected": ["date", "time"]},
-        # date_parser=lambda x: pd.to_datetime(x, format="%d-%m-%y %H:%M:%S"),
-        engine="python",
-    )
-
-    for chunk in chunk_generator:
-        # Your processing code here
-        # For example, you can concatenate the date and time columns and convert them to datetime
-        chunk["date_time_corrected"] = pd.to_datetime(
-            chunk["date"] + " " + chunk["time"], format="%d-%m-%y %H:%M:%S"
-        )
-        df = pd.concat([df, chunk])
-    """
-    # Chunk METHOD END =================================================
-
-    # concurrent method START =================================================
-
-    """
-    """
-    chunk_size = 10000  # Specify the chunk size
-
-    # Initialize an empty list to store the processed chunks
-    processed_chunks = []
-
-    # Define a generator to iterate over chunks of the CSV file
-    chunk_generator = pd.read_csv(
-        source_file,
-        sep="[,\t]",
-        header=None,
-        skiprows=row,
-        names=["date", "time", "pressure", "temperature"],
-        chunksize=chunk_size,  # Specify the chunk size
-        engine="python",
-    )
-
-    # Function to process each chunk
-    def process_chunk(chunk):
-        # Your processing code here
-        # For example, you can concatenate the date and time columns and convert them to datetime
-        chunk["date_time_corrected"] = pd.to_datetime(
-            chunk["date"] + " " + chunk["time"],
-            format="%d-%m-%y %H:%M:%S",
-            # chunk["date"] + " " + chunk["time"],
-            # format="ISO8601",
-        )
-
-        # Append the processed chunk to the list
-        return chunk
-
-    # Process each chunk in parallel using ThreadPoolExecutor
-    with ThreadPoolExecutor() as executor:
-        # Submit processing tasks for each chunk and store the futures
-        futures = [executor.submit(process_chunk, chunk) for chunk in chunk_generator]
-    # Get the results from the futures as they complete
-    for future in futures:
-        processed_chunks.append(future.result())
-
-    # Concatenate all processed chunks into a single DataFrame
-    df = pd.concat(processed_chunks)
-
-    # concurrent method END =================================================
+    df = read_csv_standard(source_file, row, is_spartek=False)
+    # df = read_csv_chunck(source_file, row, is_spartek=False)
+    # df = read_csv_concurrency(source_file, row, is_spartek=False)
 
     end_time_loaded = time.time()
     execution_time_loaded = end_time_loaded - start_time
@@ -121,12 +41,21 @@ def load_df_metorlog(source_file, row: int):
 
     # Calculate the rolling standard deviation for pressure and pressure derivative
     df["1st_derivative"] = (df["pressure_diff"] / df["time_diff"]) * 100
-    df["2nd_derivative"] = (df["pressure_diff"].diff() / df["time_diff"]) * 100
+    df["temperature_diff"] = df["temperature"].diff()
+    df["1st_derivative_t"] = (df["temperature_diff"] / df["time_diff"]) * 100
+    # df["2nd_derivative"] = (df["pressure_diff"].diff() / df["time_diff"]) * 100
     # window_size = 50  # You can adjust the window size as needed
     # df["pressure_std"] = df["pressure"].rolling(window=window_size, min_periods=1).std()
     # df["pressure_derivative_std"] = (
     #     df["1st_derivative"].rolling(window=window_size, min_periods=1).std()
     # )
+
+    # df_new = df[["elpse", "pressure"]]
+    # elpse_array = df_new["elpse"].values
+    # pressure_array = df_new["pressure"].values
+    # derive_result = calc_derivative_np(elpse_array, pressure_array, 0.0)
+    # derive_result_df = pd.DataFrame(derive_result)
+    # df.loc[:, "derived_pressure"] = derive_result_df
 
     end_time_statistics = time.time()
     execution_time_statistics = end_time_statistics - start_time
@@ -179,8 +108,8 @@ def Gauges_data_Metrolog(source_file, row=20):
     # make the graphs in one function
     end_time_draw = time.time()
     execution_time_draw = end_time_draw - start_time
-    # make_graphs(df_lst, st)
-    make_graphs_optimized(df_lst, st)
+    make_graphs(df_lst, st)
+    # make_graphs_optimized(df_lst, st)
     end_time_graphing = time.time()
     execution_time_graphing = end_time_graphing - start_time
     st.success(
