@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from helpers.handlers.make_graphs import make_graphs
+from helpers.handlers.make_graphs import make_graphs, make_graphs_optimized
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -67,6 +67,8 @@ def load_df_metorlog(source_file, row: int):
 
     # concurrent method START =================================================
 
+    """
+    """
     chunk_size = 10000  # Specify the chunk size
 
     # Initialize an empty list to store the processed chunks
@@ -88,7 +90,10 @@ def load_df_metorlog(source_file, row: int):
         # Your processing code here
         # For example, you can concatenate the date and time columns and convert them to datetime
         chunk["date_time_corrected"] = pd.to_datetime(
-            chunk["date"] + " " + chunk["time"], format="%d-%m-%y %H:%M:%S"
+            chunk["date"] + " " + chunk["time"],
+            format="%d-%m-%y %H:%M:%S",
+            # chunk["date"] + " " + chunk["time"],
+            # format="ISO8601",
         )
 
         # Append the processed chunk to the list
@@ -98,9 +103,6 @@ def load_df_metorlog(source_file, row: int):
     with ThreadPoolExecutor() as executor:
         # Submit processing tasks for each chunk and store the futures
         futures = [executor.submit(process_chunk, chunk) for chunk in chunk_generator]
-    """
-    """
-
     # Get the results from the futures as they complete
     for future in futures:
         processed_chunks.append(future.result())
@@ -177,10 +179,10 @@ def Gauges_data_Metrolog(source_file, row=20):
     # make the graphs in one function
     end_time_draw = time.time()
     execution_time_draw = end_time_draw - start_time
-    make_graphs(df_lst, st)
+    # make_graphs(df_lst, st)
+    make_graphs_optimized(df_lst, st)
     end_time_graphing = time.time()
     execution_time_graphing = end_time_graphing - start_time
     st.success(
         f"Done ... Draw table took {execution_time_draw:.2f} sec , Graphing took {execution_time_graphing:.2f} sec"
     )
-    # st.write(f"graphing took {execution_time_graphing}")

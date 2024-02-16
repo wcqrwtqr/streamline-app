@@ -28,9 +28,8 @@ def gauges_spartek_page():
     try:
         # Execute the program
         Gauges_data_Spartek(source_data)
-    except Exception:
-        st.subheader("No Data available!!")
-        st.write("Select correct data for spartek gauges")
+    except Exception as e:
+        st.write("An error occured:" + str(e))
 
 
 def gauges_metrolog_page():
@@ -50,5 +49,3 @@ def gauges_metrolog_page():
         Gauges_data_Metrolog(source_data)
     except Exception as e:
         st.write("An error occured:" + str(e))
-        # st.subheader("No Data available!!")
-        # st.write("Select correct data for the gauges")
