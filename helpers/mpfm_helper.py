@@ -37,9 +37,11 @@ def mpfm_data(source_file):
 
     # Creating the masked df from the index
     expander = st.expander("Data Selection")
-    df_header = expander.multiselect("Choose the data for the csv export", header_list, header_list[:-12])
+    df_header = expander.multiselect(
+        "Choose the data for the csv export", header_list, header_list[:-12]
+    )
 
-    df_lst = df[range_data_selection[0]: range_data_selection[1]]
+    df_lst = df[range_data_selection[0] : range_data_selection[1]]
     df_lst2 = df_lst[df_header]
 
     # Averages calculation
@@ -62,17 +64,10 @@ def mpfm_data(source_file):
     avg_liquid = averages["Std.OilFlowrate"] + averages["WaterFlowrate"]
     API = 141.5 / (averages["OilDensity"] / 1000) - 131.5
 
-    start = (
-        df_lst["date_time"][range_data_selection[0]] + " " + df_lst["Date"][range_data_selection[0]]
-    )
-    end = (
-        df_lst["date_time"][range_data_selection[1] - 1] + " " + df_lst["Date"][range_data_selection[1] - 1]
-    )
-
     # Making the dataframe
     summary_data = {
-        "Start Time": start,
-        "End Time": end,
+        "Start Time": df_lst["date_time"][range_data_selection[0]],
+        "End Time": df_lst["date_time"][range_data_selection[1] - 1],
         "WHP": averages["Pressure"],
         "WHT": averages["Temperature"],
         "Diff dP": averages["dP"],
@@ -91,27 +86,51 @@ def mpfm_data(source_file):
 
     summary = pd.DataFrame([summary_data])
     st.markdown(f"*Available Data: {df_lst2.shape[0]}")
-    gas_rate_float = "{:.4f}".format(averages["Std.GasFlowrate"])
     container = st.container(border=True)
     container.write("Averages and Max values")
-    container.markdown(
-        f"Data Average Values : Oil rate __*{int(averages["Std.OilFlowrate"])}*__ , Gas rate __{gas_rate_float}__ , GOR __{int(averages["GOR(std)"])}__"
-    )
-    container.markdown(
-        f'Data Max Values : Oil rate __{int(df_lst["Std.OilFlowrate"].max())}__ , Gas rate __{df_lst["Std.GasFlowrate"].max()}__ , GOR __{int(df_lst["GOR(std)"].max())}__'
-    )
+    result = {
+        "Average": {
+            "Oil Rate BPD": int(averages["Std.OilFlowrate"]),
+            "Gas Rate MMSCFD": averages["Std.GasFlowrate"],
+            "GOR": int(averages["GOR(std)"]),
+        },
+        "Max": {
+            "Oil Rate BPD": int(df_lst["Std.OilFlowrate"].max()),
+            "Gas Rate MMSCFD": df_lst["Std.GasFlowrate"].max(),
+            "GOR": int(df_lst["GOR(std)"].max()),
+        },
+        "Min": {
+            "Oil Rate BPD": int(df_lst["Std.OilFlowrate"].min()),
+            "Gas Rate MMSCFD": df_lst["Std.GasFlowrate"].min(),
+            "GOR": int(df_lst["GOR(std)"].min()),
+        },
+    }
+    container.table(result)
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 Pressure vs Dp", "📈 Pressure vs Temp", "📈 Oil vs GOR", "📈 Oil vs Gas vs water", "📈 Water vs BSW"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(
+        [
+            "📈 Pressure vs Dp",
+            "📈 Pressure vs Temp",
+            "📈 Oil vs GOR",
+            "📈 Oil vs Gas vs water",
+            "📈 Water vs BSW",
+        ]
+    )
     graphing_line_arg(df_lst, "date_time", tab1, ["Pressure", "dP"])
     graphing_line_arg(df_lst, "date_time", tab2, ["Pressure", "Temperature"])
     graphing_line_arg(df_lst, "date_time", tab3, ["Std.OilFlowrate", "GOR(std)"])
-    graphing_line_arg(df_lst, "date_time", tab4, ["Std.OilFlowrate", "Std.GasFlowrate", "WaterFlowrate"])
+    graphing_line_arg(
+        df_lst,
+        "date_time",
+        tab4,
+        ["Std.OilFlowrate", "Std.GasFlowrate", "WaterFlowrate"],
+    )
     graphing_line_arg(df_lst, "date_time", tab5, ["WaterFlowrate", "Std.Watercut"])
 
     # making the average table along with a graph
     with st.expander(label="Average table"):
         avg_selection = st.multiselect("select parameter", header_list[2:-1])
-        col6, col7 = st.columns(2)
+        col6, _ = st.columns(2)
         if avg_selection != []:
             col6.write("Average table 👇🏼")
         col6.dataframe(df_lst[avg_selection].mean())
