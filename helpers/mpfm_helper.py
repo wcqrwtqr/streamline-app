@@ -3,7 +3,40 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from helpers.handlers.graphing import graphing_line_arg
+from helpers.handlers.graphing import (
+    graphing_line_arg,
+    graphing_line_2v,
+)
+
+# Pdf creation
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+
+
+# Will start doing pdf printable options in printable_branch and when done
+# will be merging the changes to the main branch
+
+
+def dataframe_to_table(df):
+    # data = [df.columns[:,].values.astype(str).tolist()] + df.values.tolist()
+    data = [df.columns.astype(str).tolist()] + df.values.tolist()
+    table = Table(data)
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+                ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),
+            ]
+        )
+    )
+    return table
 
 
 def calculate_averages(df, columns):
@@ -21,6 +54,13 @@ def mpfm_data(source_file):
 
     df = pd.read_csv(source_file, sep="\t")
     df.dropna(inplace=True, axis=1)
+
+    # ======================================================
+    # Making the pdf content
+    doc = SimpleDocTemplate("./pdf_reports/report.pdf", pagesize=letter)
+    styles = getSampleStyleSheet()
+    # report_content = []
+    # ======================================================
 
     # Masking
     range_data = df.index.tolist()
@@ -107,6 +147,30 @@ def mpfm_data(source_file):
     }
     container.table(result)
 
+    # =================================
+    table_data = []
+    for k, v in summary_data.items():
+        table_data.append([k, v])
+
+    table_summary_data = []
+    for key, sub_dict in result.items():
+        row = [key]
+        for sub_key, value in sub_dict.items():
+            row.append(sub_key)
+            row.append(value)
+    table_summary_data.append(row)
+
+    # report_table = Table(data=table_data)
+    # report_content.append(image1)
+
+    table_style = [("GRID", (0, 0), (-1, -1), 1, colors.black)]
+    report_table = Table(data=table_data, style=table_style, hAlign="LEFT")
+    report_summary_table = Table(
+        data=table_summary_data, style=table_style, hAlign="LEFT"
+    )
+    report_title = Paragraph("Data Summary of MPFM", styles["h1"])
+    # =================================
+
     tab1, tab2, tab3, tab4, tab5 = st.tabs(
         [
             "📈 Pressure vs Dp",
@@ -117,6 +181,8 @@ def mpfm_data(source_file):
         ]
     )
     graphing_line_arg(df_lst, "date_time", tab1, ["Pressure", "dP"])
+    # graph1, image1 = graphing_line_3v(df_lst, "date_time", "Pressure", "dP")
+    # tab1.plotly_chart(graph1)
     graphing_line_arg(df_lst, "date_time", tab2, ["Pressure", "Temperature"])
     graphing_line_arg(df_lst, "date_time", tab3, ["Std.OilFlowrate", "GOR(std)"])
     graphing_line_arg(
@@ -153,13 +219,21 @@ def mpfm_data(source_file):
         SS = st.multiselect("Select Headers", header_list[2:-2])
         graphing_line_arg(df_lst, "date_time", st, SS)
 
+    # ===============================================
+    with st.expander(label="Generate pdf"):
+        st.title("Generate")
+        if st.button("Generate PDF"):
+            # doc.build([report_content])
+            doc.build([report_title, report_table, report_summary_table])
+            st.success("Pdf generated successfully")
+    # ===============================================
+
     with st.expander(label="Correlation"):
         selector = st.multiselect("select one", header_list[2:-2])
         cmp = st.selectbox(
             "select one",
             ["coolwarm", "BuPu", "coolwarm_r", "magma", "magma_r", "tab10"],
         )
-
         fig, ax = plt.subplots()
         sns.heatmap(df_lst[selector].corr(), cmap=cmp, annot=True, ax=ax)
         st.pyplot(fig)

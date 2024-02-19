@@ -6,3 +6,5 @@ seaborn
 scipy
 plotly
 altair
+reportlab
+kaleido
