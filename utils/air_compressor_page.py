@@ -22,6 +22,5 @@ def air_compressor_page():
         )
     try:
         air_compressor_helper()
-    except Exception:
-        st.subheader("No data selected")
-        st.write("Select the correct data for the MPFM")
+    except Exception as e:
+        st.write("An error occured:" + str(e))

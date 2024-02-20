@@ -3,21 +3,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from typing import Dict, List
 from helpers.handlers.graphing import graphing_line_arg
 
 
-def calculate_averages(df, columns):
+def calculate_averages(df: pd.DataFrame, columns: List[str]) -> Dict[str, float]:
     return {column: np.average(df[column]) for column in columns}
 
 
 def mpfm_data(source_file):
-    """MPFM data processing generator
-
-    :param source_file: file path
-    :type source_file: string
-
-    :returns: None
-    :rtype: None"""
 
     df = pd.read_csv(source_file, sep="\t")
     df.dropna(inplace=True, axis=1)
@@ -84,6 +78,7 @@ def mpfm_data(source_file):
         "Water SG": averages["WaterDensity"],
     }
 
+    # Convert summary_data dictionary to DataFrame
     summary = pd.DataFrame([summary_data])
     st.markdown(f"*Available Data: {df_lst2.shape[0]}")
     container = st.container(border=True)
@@ -127,15 +122,6 @@ def mpfm_data(source_file):
     )
     graphing_line_arg(df_lst, "date_time", tab5, ["WaterFlowrate", "Std.Watercut"])
 
-    # making the average table along with a graph
-    with st.expander(label="Average table"):
-        avg_selection = st.multiselect("select parameter", header_list[2:-1])
-        col6, _ = st.columns(2)
-        if avg_selection != []:
-            col6.write("Average table 👇🏼")
-        col6.dataframe(df_lst[avg_selection].mean())
-        graphing_line_arg(df_lst, "date_time", col6, avg_selection)
-
     # Showing the data set with the needed columns
     with st.expander(label="Data Set"):
         NN = st.selectbox("Interval", [1, 5, 10, 20, 30])
@@ -149,26 +135,26 @@ def mpfm_data(source_file):
         st.markdown("Average Table")
         st.dataframe(summary)
 
-    with st.expander(label="Custom Graph"):
-        SS = st.multiselect("Select Headers", header_list[2:-2])
-        graphing_line_arg(df_lst, "date_time", st, SS)
-
     with st.expander(label="Correlation"):
         selector = st.multiselect("select one", header_list[2:-2])
         cmp = st.selectbox(
             "select one",
             ["coolwarm", "BuPu", "coolwarm_r", "magma", "magma_r", "tab10"],
         )
-        # df_corr = df_lst[selector].fillna(df_lst.mean())
-        # df_corr = df_lst[selector].fillna(0)
         if selector:
             fig, ax = plt.subplots()
             sns.heatmap(df_lst[selector].corr(), cmap=cmp, annot=True, ax=ax)
             st.pyplot(fig)
-            st.plotly_chart(fig)
 
-        # fig, ax = plt.subplots()
-        # sns.heatmap(df_lst[selector].corr(), cmap=cmp, annot=True, ax=ax)
-        # # sns.heatmap(df_corr.corr(), cmap=cmp, annot=True, ax=ax)
-        # st.pyplot(fig)
-        # st.plotly_chart(fig)
+    with st.expander(label="Custom Graph"):
+        SS = st.multiselect("Select Headers", header_list[2:-2])
+        graphing_line_arg(df_lst, "date_time", st, SS)
+
+    # making the average table along with a graph
+    with st.expander(label="Average table"):
+        avg_selection = st.multiselect("select parameter", header_list[2:-1])
+        col6, _ = st.columns(2)
+        if avg_selection != []:
+            col6.write("Average table 👇🏼")
+        col6.dataframe(df_lst[avg_selection].mean())
+        graphing_line_arg(df_lst, "date_time", col6, avg_selection)

@@ -13,6 +13,5 @@ def nodal_page():
     # ======================= IPR curve tab ================================
     try:
         nodal_helper()  # IPR
-    except Exception:
-        st.subheader("No data selected")
-        st.write("Select the correct data for the PVT")
+    except Exception as e:
+        st.write("An error occured:" + str(e))

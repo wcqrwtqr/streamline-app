@@ -25,6 +25,5 @@ def simulation_page():
         )
     try:
         simulation_helper()
-    except Exception:
-        st.subheader("No data selected")
-        st.write("Select the correct data for the PVT")
+    except Exception as e:
+        st.write("An error occured:" + str(e))

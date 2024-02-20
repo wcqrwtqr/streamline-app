@@ -9,14 +9,7 @@ def conversion_page():
     This page is for conversion between type of flow rates and pressure values
     """
     )
-    with st.expander(label="Usage guidelines"):
-        st.info(
-            """ To get the air oil ratio update the following parameters\n
-            Paramters:
-            """
-        )
     try:
         conversion_helper()
-    except Exception:
-        st.subheader("No data selected")
-        st.write("Select the correct data for the MPFM")
+    except Exception as e:
+        st.write("An error occured:" + str(e))
