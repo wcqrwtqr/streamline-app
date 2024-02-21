@@ -1,8 +1,18 @@
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
+from typing import Tuple, List
 
 
-def sep_and_names(is_spartek: bool):
+def compute_statistics_df(df: pd.DataFrame) -> pd.DataFrame:
+    df["time_diff"] = df["date_time_corrected"].diff().dt.seconds
+    df["pressure_diff"] = df["pressure"].diff()
+    df["temperature_diff"] = df["temperature"].diff()
+    df["1st_derivative"] = (df["pressure_diff"] / df["time_diff"]) * 100
+    return df
+
+
+def sep_and_names(is_spartek: bool) -> Tuple[str, List[str]]:
+    # choose the names of the header in case of metrolog or spartek
     if not is_spartek:
         sep = "[,\t]"
         names = ["date", "time", "pressure", "temperature"]
@@ -12,7 +22,7 @@ def sep_and_names(is_spartek: bool):
     return sep, names
 
 
-def drop_and_make_datetime(df, is_spartek: bool):
+def drop_and_make_datetime(df: pd.DataFrame, is_spartek: bool) -> pd.DataFrame:
     if is_spartek:
         df["date_time"] = df["date"] + " " + df["time"] + " " + df["AMPM"]
         date_formats = [
@@ -65,7 +75,7 @@ def drop_and_make_datetime(df, is_spartek: bool):
     return df
 
 
-def read_csv_standard(source_file: str, row: int, is_spartek=False):
+def read_csv_standard(source_file: str, row: int, is_spartek=False) -> pd.DataFrame:
     sep, names = sep_and_names(is_spartek)
     df = pd.read_csv(
         source_file,

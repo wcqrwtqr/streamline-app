@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from typing import Dict, List
 from helpers.handlers.graphing import graphing_line_arg
+from helpers.handlers.mpfm_functions import avg_columns
 
 
 def calculate_averages(df: pd.DataFrame, columns: List[str]) -> Dict[str, float]:
     return {column: np.average(df[column]) for column in columns}
 
 
-def mpfm_data(source_file):
+def mpfm_data(source_file: str):
 
     df = pd.read_csv(source_file, sep="\t")
     df.dropna(inplace=True, axis=1)
@@ -35,31 +36,17 @@ def mpfm_data(source_file):
         "Choose the data for the csv export", header_list, header_list[:-12]
     )
 
-    df_lst = df[range_data_selection[0] : range_data_selection[1]]
-    df_lst2 = df_lst[df_header]
+    df_lst: pd.DataFrame = df[range_data_selection[0] : range_data_selection[1]]
+    df_lst2: pd.DataFrame = df_lst[df_header]
 
-    # Averages calculation
-    avg_columns = [
-        "Pressure",
-        "Temperature",
-        "dP",
-        "Std.OilFlowrate",
-        "WaterFlowrate",
-        "Std.GasFlowrate",
-        "Act.GasFlowrate",
-        "GOR(std)",
-        "Std.Watercut",
-        "OilDensity",
-        "WaterDensity",
-        "GasDensity",
-    ]
-    averages = calculate_averages(df_lst, avg_columns)
+    # Calculate averages of the data frame (all columns mentioned in the function)
+    averages: Dict[str, float] = calculate_averages(df_lst, avg_columns)
 
-    avg_liquid = averages["Std.OilFlowrate"] + averages["WaterFlowrate"]
-    API = 141.5 / (averages["OilDensity"] / 1000) - 131.5
+    avg_liquid: float = averages["Std.OilFlowrate"] + averages["WaterFlowrate"]
+    API: float = 141.5 / (averages["OilDensity"] / 1000) - 131.5
 
     # Making the dataframe
-    summary_data = {
+    summary_data: Dict = {
         "Start Time": df_lst["date_time"][range_data_selection[0]],
         "End Time": df_lst["date_time"][range_data_selection[1] - 1],
         "WHP": averages["Pressure"],
@@ -83,7 +70,8 @@ def mpfm_data(source_file):
     st.markdown(f"*Available Data: {df_lst2.shape[0]}")
     container = st.container(border=True)
     container.write("Averages and Max values")
-    result = {
+
+    result: Dict = {
         "Average": {
             "Oil Rate BPD": int(averages["Std.OilFlowrate"]),
             "Gas Rate MMSCFD": averages["Std.GasFlowrate"],

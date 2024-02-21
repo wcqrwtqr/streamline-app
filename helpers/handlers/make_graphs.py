@@ -1,101 +1,83 @@
 from helpers.handlers.graphing import graphing_line_arg
 from helpers.handlers.graphing import graphing_line_2v
 import concurrent.futures
+import pandas as pd
+from typing import Dict, List
+import streamlit as st
 
 
 # Template for the arg function which accept any number of arguments
 # It might have some performance issues when dealing with big data
-def graph_template(df, st, label: str, y1: str, y2: str):
+def graph_template(df: pd.DataFrame, st: st, label: str, y1: str, y2: str):
     with st.expander(label=label):
         graphing_line_arg(df, "date_time_corrected", st, [y1, y2])
 
 
 # This function is to use the normal v2 function which is more efficient
-def graph_template_v2(df, st, label: str, xval: str, val1: str, val2: str):
+def graph_template_v2(
+    df: pd.DataFrame, st: st, label: str, xval: str, val1: str, val2: str
+):
     with st.expander(label=label):
         val = graphing_line_2v(df, xval, val1, val2)
         st.plotly_chart(val)
 
 
+# List of data to get it graphed
+data_to_graphs: list[str] = [
+    ["Pressure vs Temperature", "pressure", "temperature"],
+    ["Pressure vs dp/dt", "pressure", "1st_derivative"],
+]
+
+
 # Make the graphing using the easy graphing_line_v2 function
-def make_graphs_optimized(df, st):
-    with st.expander(label="Pressure vs Temperature"):
-        pressure_vs_temperature = graphing_line_2v(
-            df, "date_time_corrected", "pressure", "temperature"
-        )
-        st.plotly_chart(pressure_vs_temperature)
-
-    with st.expander(label="Pressure vs dp/dt"):
-        press_1st = graphing_line_2v(
-            df, "date_time_corrected", "pressure", "1st_derivative"
-        )
-        st.plotly_chart(press_1st)
-
-    # with st.expander(label="Temperature vs dT/dt"):
-    #     press_1st = graphing_line_2v(
-    #         df, "date_time_corrected", "temperature", "1st_derivative_t"
-    #     )
-    #     st.plotly_chart(press_1st)
+def make_graphs_optimized(df: pd.DataFrame, st: st) -> None:
+    # Loop over the list of strings and make the graphs
+    for data_to_graph in data_to_graphs:
+        with st.expander(label=data_to_graph[0]):
+            graph = graphing_line_2v(
+                df, "date_time_corrected", data_to_graph[1], data_to_graph[2]
+            )
+            st.plotly_chart(graph)
 
 
-def make_graphs(df, st):
+def make_graphs(df: pd.DataFrame, st: st):
     futures = []
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Submit tasks for each graph
-        futures.append(
-            executor.submit(
-                graph_template_v2(
-                    df,
-                    st,
-                    "Pressure vs Temperature",
-                    "date_time_corrected",
-                    "pressure",
-                    "temperature",
+    for data_to_graph in data_to_graphs:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit tasks for each graph
+            futures.append(
+                executor.submit(
+                    graph_template_v2(
+                        df,
+                        st,
+                        data_to_graph[0],
+                        "date_time_corrected",
+                        data_to_graph[1],
+                        data_to_graph[2],
+                    )
                 )
             )
-        )
-        futures.append(
-            executor.submit(
-                graph_template_v2(
-                    df,
-                    st,
-                    "Pressure vs 1st Derivative",
-                    "date_time_corrected",
-                    "pressure",
-                    "1st_derivative",
-                )
-            )
-        )
-        # futures.append(
-        #     executor.submit(
-        #         graph_template_v2(
-        #             df,
-        #             st,
-        #             "Pressure vs Derivative",
-        #             "date_time_corrected",
-        #             "pressure",
-        #             "derived_pressure",
-        #         )
-        #     )
-        # )
-
-        # --- Using the graphing_line_arg function ##
-        # futures.append(
-        #     executor.submit(
-        #         graph_template(
-        #             df, st, "Pressure vs Temperature", "pressure", "temperature"
-        #         )
-        #     )
-        # )
-        # futures.append(
-        #     executor.submit(
-        #         graph_template(
-        #             df, st, "Pressure vs 1st Derivative", "pressure", "1st_derivative"
-        #         )
-        #     )
-        # )
 
     # Wait for all tasks to complete
     # concurrent.futures.wait(futures)
     return futures
+
+
+def data_stats_for_gaguges(df: pd.DataFrame):
+    # Create dictionary and fill it with min and max values and
+    # create a container with streamlit
+    stats: Dict = {
+        "Max": {
+            "Pressure": df["pressure"].max(),
+            "Temperature": df["temperature"].max(),
+        },
+        "Min": {
+            "Pressure": df["pressure"].min(),
+            "Temperature": df["temperature"].min(),
+        },
+    }
+    container = st.container(border=True)
+    container.write("Max and Min Values")
+    container.table(stats)
+    container.markdown(f"*Available Data: {df.shape[0]}")

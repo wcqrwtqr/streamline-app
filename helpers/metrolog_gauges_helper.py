@@ -1,10 +1,16 @@
 import pandas as pd
 import streamlit as st
-from helpers.handlers.make_graphs import make_graphs, make_graphs_optimized
+from typing import Dict, List
+from helpers.handlers.make_graphs import (
+    make_graphs,
+    make_graphs_optimized,
+    data_stats_for_gaguges,
+)
 from helpers.handlers.read_csv_gauges import (
     read_csv_standard,
     read_csv_chunck,
     read_csv_concurrency,
+    compute_statistics_df,
 )
 import time
 from helpers.handlers.derived_pressure import calc_derivative_np
@@ -26,8 +32,6 @@ def load_df_metorlog(source_file, row: int):
     """
     start_time = time.time()
 
-    # OLD METHOD =================================================
-
     df = read_csv_standard(source_file, row, is_spartek=False)
     # df = read_csv_chunck(source_file, row, is_spartek=False)
     # df = read_csv_concurrency(source_file, row, is_spartek=False)
@@ -36,32 +40,14 @@ def load_df_metorlog(source_file, row: int):
     execution_time_loaded = end_time_loaded - start_time
 
     # st.write(df.head())
-    df["time_diff"] = df["date_time_corrected"].diff().dt.seconds
-    df["pressure_diff"] = df["pressure"].diff()
-
-    # Calculate the rolling standard deviation for pressure and pressure derivative
-    df["1st_derivative"] = (df["pressure_diff"] / df["time_diff"]) * 100
-    df["temperature_diff"] = df["temperature"].diff()
-    df["1st_derivative_t"] = (df["temperature_diff"] / df["time_diff"]) * 100
-    # df["2nd_derivative"] = (df["pressure_diff"].diff() / df["time_diff"]) * 100
-    # window_size = 50  # You can adjust the window size as needed
-    # df["pressure_std"] = df["pressure"].rolling(window=window_size, min_periods=1).std()
-    # df["pressure_derivative_std"] = (
-    #     df["1st_derivative"].rolling(window=window_size, min_periods=1).std()
-    # )
-
-    # df_new = df[["elpse", "pressure"]]
-    # elpse_array = df_new["elpse"].values
-    # pressure_array = df_new["pressure"].values
-    # derive_result = calc_derivative_np(elpse_array, pressure_array, 0.0)
-    # derive_result_df = pd.DataFrame(derive_result)
-    # df.loc[:, "derived_pressure"] = derive_result_df
+    df = compute_statistics_df(df)
 
     end_time_statistics = time.time()
     execution_time_statistics = end_time_statistics - start_time
 
     st.success(
-        f"Done ... Load csv file took {execution_time_loaded:.2f} sec , statistics took {execution_time_statistics:.2f} sec"
+        f"Done ... Load csv file took {execution_time_loaded:.2f} sec , \
+        statistics took {execution_time_statistics:.2f} sec"
     )
 
     range_data = df.index.tolist()
@@ -90,10 +76,9 @@ def Gauges_data_Metrolog(source_file, row=20):
     # Creating the masked df from the index
     df_lst = df[range_data_selection[0] : range_data_selection[1]]
     # Showing the graphs
-    st.markdown(
-        f'Max __Temperature__: {df_lst["temperature"].max()} - Max __Pressure__: {df_lst["pressure"].max()}'
-    )
-    st.markdown(f"*Available Data: {df_lst.shape[0]}")
+
+    # Make the stats of min and max in the function below
+    data_stats_for_gaguges(df_lst)
 
     start_time = time.time()
     with st.expander(label="Table of Data"):

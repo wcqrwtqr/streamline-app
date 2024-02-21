@@ -17,6 +17,5 @@ def mpfm_page():
     st.write("---")
     try:
         mpfm_data(source_data)
-        col1, col2 = st.columns(2)
     except Exception as e:
         st.write("An error occured:" + str(e))
