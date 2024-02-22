@@ -7,13 +7,14 @@ from utils.simulation_page import simulation_page
 from utils.nodal_page import nodal_page
 from utils.conversion_page import conversion_page
 from utils.gauges_page import gauges_metrolog_page, gauges_spartek_page
-from utils.pressure_drop_page import pressure_drop_page
+
+# from utils.pressure_drop_page import pressure_drop_page
 
 
 if __name__ == "__main__":
     # Make the pages here in a Dict
     page_name_to_func = {
-        "Intro": intro,
+        "Intro Page": intro,
         "MPFM": mpfm_page,
         "Gauges Spartek": gauges_spartek_page,
         "Gauges Metrolog": gauges_metrolog_page,
@@ -22,7 +23,7 @@ if __name__ == "__main__":
         "Simulation": simulation_page,
         "Nodal": nodal_page,
         "Conversion": conversion_page,
-        "Pressure Drop": pressure_drop_page,
+        # "Pressure Drop": pressure_drop_page,
     }
     # Get the string of pages
     page_name = st.sidebar.selectbox("Choose page", page_name_to_func.keys())

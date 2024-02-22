@@ -64,7 +64,7 @@ def make_graphs(df: pd.DataFrame, st: st):
     return futures
 
 
-def data_stats_for_gaguges(df: pd.DataFrame):
+def data_stats_for_gaguges(df: pd.DataFrame) -> None:
     # Create dictionary and fill it with min and max values and
     # create a container with streamlit
     stats: Dict = {

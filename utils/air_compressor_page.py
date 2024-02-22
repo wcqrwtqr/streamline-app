@@ -1,5 +1,7 @@
 import streamlit as st
 from helpers.air_compressor_helper import air_compressor_helper
+import os
+from PIL import Image
 
 
 def air_compressor_page():
@@ -11,7 +13,13 @@ def air_compressor_page():
     Ensure to get the rate between 10% and 20% to have a good burning
     """
     )
-    with st.expander(label="Usage guidelines"):
+    with st.expander(label="Information and usage guidelines"):
+        package_dir = os.path.dirname(os.path.abspath(__file__))
+        image = Image.open(
+            os.path.join(package_dir, "../Thumbnail/EvergreenBurner.jpg")
+        )
+        st.image(image, caption="Evergreen Burner")
+
         st.info(
             """ To get the air oil ratio update the following parameters\n
             Paramters:

@@ -22,7 +22,5 @@ def intro():
     )
 
     package_dir = os.path.dirname(os.path.abspath(__file__))  # Note the pat to /utils
-    image = Image.open(
-        os.path.join(package_dir, "../Thumbnail/IMG_9889.JPG")
-    )  # ../ to go back
+    image = Image.open(os.path.join(package_dir, "../Thumbnail/IMG_9889.JPG"))
     st.image(image, caption="Free Palestine")

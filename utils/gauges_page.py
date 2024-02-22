@@ -11,8 +11,9 @@ def gauges_spartek_page():
     st.title("Down Hole Gauges _Spartek_ 🌡")
     st.markdown(
         """
-                The below is to manipulate __SPARTEK__ Down Hole Memory Gauges row data\n
-                The page can view the data, download the values after applying a reduction factor to excel
+        Quickly and easily manipulate the data from __SPARTEK__ Down Hole Memory Gauges \
+        with our provided tool. View the data on the page or download it to Excel for \
+            further analysis or processing. 
                 """
     )
     with st.expander(label="Upload row data guidelines"):
@@ -36,9 +37,10 @@ def gauges_metrolog_page():
     st.title("Down Hole Gauges _Metrolog_ 🌡")
     st.markdown(
         """
-                    The below is to manipulate __METROLOG__ Down Hole Memory Gauges row data\n
-                    The page can view the data, download the values after applying a reduction factor to excel
-                    """
+            Quickly and easily manipulate the data from __METROLOG__ Down Hole Memory Gauges \
+            with our provided tool. View the data on the page or download it to Excel for \
+                further analysis or processing. 
+        """
     )
     source_data = st.file_uploader(
         label="Uplaod gauges data to web page", type=["csv", "log", "txt"]

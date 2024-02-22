@@ -3,14 +3,14 @@ import pandas as pd
 from typing import List, Tuple
 from helpers.handlers.make_graphs import (
     make_graphs,
-    make_graphs_optimized,
     data_stats_for_gaguges,
+    # make_graphs_optimized,
 )
 from helpers.handlers.read_csv_gauges import (
     read_csv_standard,
-    read_csv_chunck,
-    read_csv_concurrency,
     compute_statistics_df,
+    # read_csv_chunck,
+    # read_csv_concurrency,
     # get_sgs_data,
     # get_sgs_data_std,
 )
@@ -78,29 +78,6 @@ def Gauges_data_Spartek(source_file, row=20):
 
     make_graphs(df_lst, st)
     # make_graphs_optimized(df_lst, st)
-
-    # sgs_df = get_sgs_data(df_lst)
-    # with st.expander("SGS"):
-    #     with st.form(key="Get Gradient Data"):
-    #         col1, col2 = st.columns(2)
-    #         threshold = col1.number_input("threshold", step=0.0001)
-    #         no_steps = int(col2.number_input("No of steps", 10))
-    #         submit = st.form_submit_button(label="Get SGS Data")
-    #         if submit:
-    #             sgs_df_std, sgs_size = get_sgs_data_std(
-    #                 df_lst, threshold=threshold, no_steps=no_steps
-    #             )
-    #             st.write(f"No of points {sgs_size}")
-    #             st.table(sgs_df_std)
-
-    # sgs_df_std, sgs_size = get_sgs_data_std(df_lst, threshold=0.00001, no_steps=10)
-    # st.table(sgs_df_std.head())
-    # st.write(f"size{sgs_size}")
-    # st.table(sgs_df_std.describe())
-
-    # with st.expander(label="SGS"):
-    #     sgs_df = get_sgs_data(df_lst)
-    #     st.table(sgs_df)
 
     end_time_graphing = time.time()
     execution_time_graphing = end_time_graphing - start_time

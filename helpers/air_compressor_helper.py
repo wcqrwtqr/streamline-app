@@ -6,7 +6,7 @@ This module help calculate the air/oil ratio for the burning process
 """
 
 
-def convert_api_and_oil_rate_to_ton(api, oil):
+def convert_api_and_oil_rate_to_ton(api: float, oil: int) -> float:
     "This function will convert the data"
     if api != 0.0:
         x_api = 1000 * (141.5 / (api + 131.5))
@@ -14,13 +14,13 @@ def convert_api_and_oil_rate_to_ton(api, oil):
     return x_ton
 
 
-def convert_air_suupply_to_ton(air):
+def convert_air_suupply_to_ton(air: int) -> float:
     "This function convert the air supply to ton"
     x_ton = air * 60 * 24 / 35.3147 * 1.225 / 1000
     return x_ton
 
 
-def calculate_the_values_of_air(API_val, air_rate, oil_rate):
+def calculate_the_values_of_air(API_val: float, air_rate: float, oil_rate: int):
     # Check if the values are no zero
     conv_oil = convert_api_and_oil_rate_to_ton(API_val, oil_rate)
     conv_air = convert_air_suupply_to_ton(air_rate)
@@ -57,7 +57,7 @@ def calculate_the_values_of_air(API_val, air_rate, oil_rate):
             return air_oil_ratio, data
 
 
-def air_compressor_helper():
+def air_compressor_helper() -> None:
     with st.form(key="file_form"):
         col1, col2, col3 = st.columns(3)
         API_val = col1.number_input(label="API", step=0.5, value=25.5)

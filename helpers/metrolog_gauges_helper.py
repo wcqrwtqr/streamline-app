@@ -13,7 +13,8 @@ from helpers.handlers.read_csv_gauges import (
     compute_statistics_df,
 )
 import time
-from helpers.handlers.derived_pressure import calc_derivative_np
+
+# from helpers.handlers.derived_pressure import calc_derivative_np
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -98,5 +99,6 @@ def Gauges_data_Metrolog(source_file, row=20):
     end_time_graphing = time.time()
     execution_time_graphing = end_time_graphing - start_time
     st.success(
-        f"Done ... Draw table took {execution_time_draw:.2f} sec , Graphing took {execution_time_graphing:.2f} sec"
+        f"Done ... Draw table took {execution_time_draw:.2f} sec , \
+            Graphing took {execution_time_graphing:.2f} sec"
     )

@@ -1,16 +1,23 @@
 import streamlit as st
 from helpers.simulation_helper import simulation_helper
+import os
+from PIL import Image
 
 
 def simulation_page():
     st.title("Trucks Loading Simulation 🚚")
     st.markdown(
         """
-                    The below is to __simulate__ the number of trucks that can be loaded in a loading station \n
-                    The input below is used to change the simulation variables and see the final results below
-                    """
+        The below is to __simulate__ the number of trucks that can be loaded in a loading station \n
+        The input below is used to change the simulation variables and see the final results below
+        """
     )
     with st.expander(label="Usage guidelines"):
+        package_dir = os.path.dirname(os.path.abspath(__file__))
+        image = Image.open(
+            os.path.join(package_dir, "../Thumbnail/loading station.jpeg")
+        )
+        st.image(image, caption="Trucks loading station")
         st.info(
             """Choose the number of __loading stations__, __time to fill__ each
                     truck, __number of trucks__ provided at a certain time
