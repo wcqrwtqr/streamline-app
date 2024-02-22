@@ -2,7 +2,7 @@ from helpers.handlers.graphing import graphing_line_arg
 from helpers.handlers.graphing import graphing_line_2v
 import concurrent.futures
 import pandas as pd
-from typing import Dict, List
+from typing import Dict
 import streamlit as st
 
 

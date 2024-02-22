@@ -1,21 +1,10 @@
 import streamlit as st
+import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 
 
-def graphing_line_arg(df, x, st=st, *args):
-    """graphing_line_arg is provided that takes in a DataFrame and allows for the drawing of multiple y axes through the use of the `args` argument. This feature enables you to create as many y axes as needed. Without quotes.
-    Parameters
-    ----------
-    df : DataFrame
-        pandas Data Frame
-    x : DataFrame Series
-        choose the x axis from the data frame
-    st :
-        streamlit instance
-    args :
-        args of the y axes as much as you have
-    """
+def graphing_line_arg(df: pd.DataFrame, x: str, st=st, *args):
 
     for arg in args:
         fig_n = make_subplots(specs=[[{"secondary_y": True}]])
@@ -23,7 +12,7 @@ def graphing_line_arg(df, x, st=st, *args):
         fig_n.update_layout(title_text=my_string)
         fig_n.update_xaxes(title_text=x)
         for idx, col in enumerate(arg):
-            bol = idx % 2 == 1
+            bol = idx % 2 == 1  # Get the 1st or secondary acxes
             fig_n.update_yaxes(title_text=col, secondary_y=bol)
             fig_n.add_trace(
                 go.Scatter(x=df[x], y=df[col], mode="lines", name=col), secondary_y=bol
@@ -32,42 +21,9 @@ def graphing_line_arg(df, x, st=st, *args):
             st.plotly_chart(fig_n)
         else:
             st.markdown("Select columns from the drop down list ☝🏼")
-    """
-    """
-
-    """
-    fig_n = make_subplots(specs=[[{"secondary_y": True}]])
-    fig_n.update_layout(title_text=", ".join(args) + " Graph", xaxis_title=x)
-
-    for idx, col in enumerate(args):
-        bol = idx % 2 == 1
-        fig_n.update_yaxes(title_text=col, secondary_y=bol)
-        fig_n.add_trace(
-            go.Scatter(x=df[x], y=df[col], mode="lines", name=col), secondary_y=bol
-        )
-
-    if args:
-        st.plotly_chart(fig_n)
-    else:
-        st.markdown("Select columns from the drop down list ☝🏼")
-    """
 
 
-def graphing_line_2v(df, x: str, ym: str, ys: str):
-    """Graphing function for two axis
-
-    :param df: Dataframe
-    :type df: string
-    :param x: Dataframe for axis x
-    :type x: string
-    :param ym: Dataframe for axis y primary
-    :type ym: string
-    :param ys: Dataframe for axis y secondary
-    :type ys: string
-
-    :returns: graph object
-    :rtype: figure"""
-
+def graphing_line_2v(df: pd.DataFrame, x: str, ym: str, ys: str):
     xt = df[x]
     yp = df[ym]
     yt = df[ys]
@@ -79,4 +35,5 @@ def graphing_line_2v(df, x: str, ym: str, ys: str):
     fig_n.update_yaxes(title_text=ys, secondary_y=True)
     fig_n.add_trace(go.Scatter(x=xt, y=yp, mode="lines", name=ym), secondary_y=False)
     fig_n.add_trace(go.Scatter(x=xt, y=yt, mode="lines", name=ys), secondary_y=True)
+
     return fig_n

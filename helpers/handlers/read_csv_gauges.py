@@ -1,9 +1,11 @@
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple, List
+import streamlit as st
 
 
 def compute_statistics_df(df: pd.DataFrame) -> pd.DataFrame:
+    # Compute all the statistics data for the dataframe
     df["time_diff"] = df["date_time_corrected"].diff().dt.seconds
     df["pressure_diff"] = df["pressure"].diff()
     df["temperature_diff"] = df["temperature"].diff()
@@ -89,7 +91,9 @@ def read_csv_standard(source_file: str, row: int, is_spartek=False) -> pd.DataFr
     return df
 
 
-def read_csv_chunck(source_file: str, row: int, is_spartek=False, chunk_size=10_000):
+def read_csv_chunck(
+    source_file: str, row: int, is_spartek=False, chunk_size=10_000
+) -> pd.DataFrame:
     sep, names = sep_and_names(is_spartek)
     df = pd.DataFrame()
     chunk_generator = pd.read_csv(
@@ -124,7 +128,7 @@ def read_csv_chunck(source_file: str, row: int, is_spartek=False, chunk_size=10_
 
 def read_csv_concurrency(
     source_file: str, row: int, is_spartek=False, chunk_size=10_000
-):
+) -> pd.DataFrame:
     chunk_size = chunk_size  # Specify the chunk size
     sep, names = sep_and_names(is_spartek)
 
@@ -170,3 +174,26 @@ def read_csv_concurrency(
         # Concatenate all processed chunks into a single DataFrame
     df = pd.concat(processed_chunks)
     return df
+
+
+# def get_sgs_data(df: pd.DataFrame) -> pd.DataFrame:
+#     sgs_recorded_points = []
+#     st.write("debug")
+#     for i in range(1, len(df)):
+#         if abs(df["pressure"].iloc[i] - df["pressure"].iloc[i - 1] < 0.01):
+#             last_stable_point = {
+#                 "time": df["date_time_corrected"].iloc[i - 1],
+#                 "pressure": df["pressure"].iloc[i - 1],
+#             }
+#             sgs_recorded_points.append(last_stable_point)
+#     df = pd.DataFrame(sgs_recorded_points)
+#     return df
+
+
+# def get_sgs_data_std(
+#     df: pd.DataFrame, threshold: float, no_steps: int
+# ) -> Tuple[pd.DataFrame, int]:
+#     stable_periods = df[df["pressure"].diff(no_steps).abs() < threshold]
+#     sgs_df = stable_periods[["date_time_corrected", "pressure"]]
+#     length = sgs_df.shape[0]
+#     return sgs_df, length
