@@ -21,6 +21,19 @@ def intro():
         "Feel free to follow me in my YouTube channel for more video on data processing"
     )
 
-    package_dir = os.path.dirname(os.path.abspath(__file__))  # Note the pat to /utils
-    image = Image.open(os.path.join(package_dir, "../Thumbnail/IMG_9889.JPG"))
-    st.image(image, caption="Free Palestine")
+    # package_dir = os.path.dirname(os.path.abspath(__file__))  # Note the pat to /utils
+    # image = Image.open(os.path.join(package_dir, "../Thumbnail/IMG_9889.JPG"))
+    # st.image(image, caption="Free Palestine")
+
+    # Get the absolute path of the current directory
+    package_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the path to the thumbnail image using os.path.join
+    image_path = os.path.join(package_dir, "..", "Thumbnail", "IMG_9889.JPG")
+
+    # Open the image
+    try:
+        image = Image.open(image_path)
+        st.image(image, caption="Free Palestine")
+    except FileNotFoundError:
+        st.error("Image not found at path: " + image_path)
