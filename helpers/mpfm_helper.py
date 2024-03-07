@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from typing import Dict, List
-from helpers.handlers.graphing import graphing_line_arg
-from helpers.handlers.mpfm_functions import avg_columns
+from handlers.graphing import graphing_line_arg
+from handlers.mpfm_functions import avg_columns
 
 
 def calculate_averages(df: pd.DataFrame, columns: List[str]) -> Dict[str, float]:

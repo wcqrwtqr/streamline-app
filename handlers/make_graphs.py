@@ -1,5 +1,5 @@
-from helpers.handlers.graphing import graphing_line_arg
-from helpers.handlers.graphing import graphing_line_2v
+from handlers.graphing import graphing_line_arg
+from handlers.graphing import graphing_line_2v
 import concurrent.futures
 import pandas as pd
 from typing import Dict

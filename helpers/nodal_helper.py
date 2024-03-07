@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import make_interp_spline
-from helpers.handlers.nodal_functions import aof, j, qo_t, j_darcy, sg_avg
-from helpers.handlers.nodal_functions import (
+from handlers.nodal_functions import aof, j, qo_t, j_darcy, sg_avg
+from handlers.nodal_functions import (
     qo_ipr_compuesto,
     Qb,
     qo_vogel,

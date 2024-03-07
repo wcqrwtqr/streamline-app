@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
 from typing import List, Tuple
-from helpers.handlers.make_graphs import (
+from handlers.make_graphs import (
     make_graphs,
     data_stats_for_gaguges,
     # make_graphs_optimized,
 )
-from helpers.handlers.read_csv_gauges import (
+from handlers.read_csv_gauges import (
     read_csv_standard,
     compute_statistics_df,
     # read_csv_chunck,
