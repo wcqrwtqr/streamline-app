@@ -20,8 +20,11 @@ def gauges_spartek_page():
         st.warning(
             "Ensure the txt file belongs to Spartek gauges and has the format as below"
         )
-        image = Image.open(os.path.join(package_dir, "../Thumbnail/spartek.jpg"))
-        st.image(image)
+        try:
+            image = Image.open(os.path.join(package_dir, "../Thumbnail/spartek.jpg"))
+            st.image(image)
+        except FileNotFoundError:
+            st.error("Image not found at path: " + image)
     source_data = st.file_uploader(
         label="Uplaod gauges data to web page", type=["csv", "log", "txt"]
     )

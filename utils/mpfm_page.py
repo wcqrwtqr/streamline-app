@@ -14,9 +14,7 @@ def mpfm_page():
                 """
     )
     with st.expander(label="Information About MPFM"):
-        package_dir = os.path.dirname(
-            os.path.abspath(__file__)
-        )  # Note the pat to /utils
+        package_dir = os.path.dirname(os.path.abspath(__file__))
         st.markdown(
             """
             Multiphase Flow Metering solutions offer critical information on well streams without \
@@ -26,8 +24,12 @@ def mpfm_page():
             data it computed.
                     """
         )
-        image = Image.open(os.path.join(package_dir, "../Thumbnail/roxar.jpg"))
-        st.image(image, caption="Roxar Multiphase meter")
+        try:
+            image = Image.open(os.path.join(package_dir, "../Thumbnail/roxar.jpg"))
+            st.image(image, caption="Roxar Multiphase meter")
+        except FileNotFoundError:
+            st.error("Image not found at path: " + image)
+
     source_data: str = st.file_uploader(
         label="Uplaod MPFM data to web page", type=["csv", "log", "txt"]
     )

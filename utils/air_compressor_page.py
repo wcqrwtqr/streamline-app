@@ -15,10 +15,13 @@ def air_compressor_page():
     )
     with st.expander(label="Information and usage guidelines"):
         package_dir = os.path.dirname(os.path.abspath(__file__))
-        image = Image.open(
-            os.path.join(package_dir, "../Thumbnail/EvergreenBurner.jpg")
-        )
-        st.image(image, caption="Evergreen Burner")
+        try:
+            image = Image.open(
+                os.path.join(package_dir, "../Thumbnail/EvergreenBurner.jpg")
+            )
+            st.image(image, caption="Evergreen Burner")
+        except FileNotFoundError:
+            st.error("Image not found at path: " + image)
 
         st.info(
             """ To get the air oil ratio update the following parameters\n

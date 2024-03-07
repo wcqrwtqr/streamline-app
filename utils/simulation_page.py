@@ -14,10 +14,13 @@ def simulation_page():
     )
     with st.expander(label="Usage guidelines"):
         package_dir = os.path.dirname(os.path.abspath(__file__))
-        image = Image.open(
-            os.path.join(package_dir, "../Thumbnail/loading station.jpeg")
-        )
-        st.image(image, caption="Trucks loading station")
+        try:
+            image = Image.open(
+                os.path.join(package_dir, "../Thumbnail/loading station.jpeg")
+            )
+            st.image(image, caption="Trucks loading station")
+        except FileNotFoundError:
+            st.error("Image not found at path: " + image)
         st.info(
             """Choose the number of __loading stations__, __time to fill__ each
                     truck, __number of trucks__ provided at a certain time
