@@ -23,7 +23,7 @@ def graph_template_v2(
 
 
 # List of data to get it graphed
-data_to_graphs: list[str] = [
+data_to_graphs: list[list[str]] = [
     ["Pressure vs Temperature", "pressure", "temperature"],
     ["Pressure vs dp/dt", "pressure", "1st_derivative"],
 ]

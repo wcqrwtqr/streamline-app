@@ -11,6 +11,8 @@ def convert_api_and_oil_rate_to_ton(api: float, oil: int) -> float:
     if api != 0.0:
         x_api = 1000 * (141.5 / (api + 131.5))
         x_ton = x_api * (oil / 6.29) / 1000
+    else:
+        x_ton = 0.0
     return x_ton
 
 

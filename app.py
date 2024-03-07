@@ -8,8 +8,6 @@ from utils.nodal_page import nodal_page
 from utils.conversion_page import conversion_page
 from utils.gauges_page import gauges_metrolog_page, gauges_spartek_page
 
-# from utils.pressure_drop_page import pressure_drop_page
-
 
 if __name__ == "__main__":
     # Make the pages here in a Dict

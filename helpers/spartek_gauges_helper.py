@@ -17,13 +17,19 @@ from helpers.handlers.read_csv_gauges import (
 import time
 
 
+def row_counting(source_file: str) -> int:
+    row_count: int = 0
+    with open(source_file, "r") as f:
+        for line in f:
+            row_count += 1
+    return row_count
+
+
 @st.cache_data
 def load_df_spartek(source_file: str, row: int) -> Tuple[pd.DataFrame, List[int]]:
     start_time = time.time()
 
     df = read_csv_standard(source_file, row, is_spartek=True)
-    # df = read_csv_chunck(source_file, row, is_spartek=True)
-    # df = read_csv_concurrency(source_file, row, is_spartek=True)
 
     end_time_loaded = time.time()
     execution_time_loaded = end_time_loaded - start_time
