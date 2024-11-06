@@ -13,6 +13,23 @@ def compute_statistics_df(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def sep_and_names_modified(data_type: str) -> Tuple[str, List[str]]:
+    match data_type:
+        case "metrolog":
+            sep = "[,\t]"
+            names = ["date", "time", "pressure", "temperature"]
+        case "spartek":
+            sep = r"\s+"
+            names = ["date", "time", "AMPM", "elpse", "pressure", "temperature"]
+        case "kuster": 
+            sep = None,
+            names = ["date", "time", "pressure", "temperature"]
+        case _:
+            raise ValueError(f"Unknown data type: {data_type}")
+
+    return sep, names
+
+
 def sep_and_names(is_spartek: bool) -> Tuple[str, List[str]]:
     # choose the names of the header in case of metrolog or spartek
     if not is_spartek:
@@ -90,6 +107,22 @@ def read_csv_standard(source_file: str, row: int, is_spartek=False) -> pd.DataFr
     df = drop_and_make_datetime(df, is_spartek)
     return df
 
+
+def read_csv_standard_kuster(source_file: str, row: int, kind: str) -> pd.DataFrame:
+    "I've added the third option of kuster so I modified the sep_name"
+    sep, names = sep_and_names_modified("kuster")
+    df = pd.read_csv(
+        source_file,
+        skiprows=row,
+        header=None,
+        sep=sep,
+        names=names,
+        engine="python",
+    )
+    st.write(df.head())
+    # df = drop_and_make_datetime(df, is_spartek=False)
+    df["date_time"] = df["date"] + " " + df["time"]
+    return df
 
 def read_csv_chunck(
     source_file: str, row: int, is_spartek=False, chunk_size=10_000

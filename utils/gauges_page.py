@@ -1,10 +1,46 @@
 import streamlit as st
 from helpers.spartek_gauges_helper import Gauges_data_Spartek
 from helpers.metrolog_gauges_helper import Gauges_data_Metrolog
+from helpers.kuster_gauges_helper import Gauges_data_kuster
 from PIL import Image
 import os
 
 package_dir = os.path.dirname(os.path.abspath(__file__))
+
+
+def gauges_kuster_page():
+    st.title("Down Hole Gauges _Kuster_ 🌡")
+    st.markdown(
+        """
+        Quickly and easily manipulate the data from __Kuster__ Down Hole Memory Gauges \
+        with our provided tool. View the data on the page or download it to Excel for \
+            further analysis or processing.
+                """
+    )
+    with st.expander(label="Upload row data guidelines"):
+        st.warning(
+            "Ensure the txt file belongs to kuster gauges and has the format as below"
+        )
+        try:
+            image = Image.open(os.path.join(package_dir, "../Thumbnail/spartek.jpg"))
+            st.image(image)
+        except FileNotFoundError:
+            st.error("Image not found at path: " + image)
+    source_data_bottom = st.file_uploader(
+        label="Uplaod bottom gauge data to web page", type=["csv", "log", "txt"],
+        key="file_bottom_unique"
+    )
+    # source_data_top = st.file_uploader(
+    #     label="Uplaod top gauge data to web page", type=["csv", "log", "txt"],
+    #     key="file_top_unique"
+    # )
+    st.write("---")
+    try:
+        # Execute the program
+        Gauges_data_kuster(source_data_bottom)
+        # Gauges_data_kuster(source_data_top)
+    except Exception as e:
+        st.write("An error occured:" + str(e))
 
 
 def gauges_spartek_page():

@@ -6,7 +6,7 @@ from utils.pvt_page import pvt_page
 from utils.simulation_page import simulation_page
 from utils.nodal_page import nodal_page
 from utils.conversion_page import conversion_page
-from utils.gauges_page import gauges_metrolog_page, gauges_spartek_page
+from utils.gauges_page import gauges_metrolog_page, gauges_spartek_page,gauges_kuster_page
 from utils.plt_las import plt_las_page
 
 
@@ -17,6 +17,7 @@ if __name__ == "__main__":
         "MPFM": mpfm_page,
         "Gauges Spartek": gauges_spartek_page,
         "Gauges Metrolog": gauges_metrolog_page,
+        "Gauges Kuster": gauges_kuster_page,
         "Air Supply": air_compressor_page,
         "PVT": pvt_page,
         "Simulation": simulation_page,
