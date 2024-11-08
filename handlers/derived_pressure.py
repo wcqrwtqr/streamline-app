@@ -6,7 +6,7 @@ def calc_derivative_np(time, pressure, factor_L):
 
     n_points = len(time)
     deriv_pressure = []
-    deriv_time = []
+    # deriv_time = []
     i = 0
     while i < n_points:
         t1 = time[i]

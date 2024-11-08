@@ -167,7 +167,8 @@ def read_csv_concurrency(
     # Process each chunk in parallel using ThreadPoolExecutor
     with ThreadPoolExecutor() as executor:
         # Submit processing tasks for each chunk and store the futures
-        futures = [executor.submit(process_chunk, chunk) for chunk in chunk_generator]
+        futures = [executor.submit(process_chunk, chunk)
+                   for chunk in chunk_generator]
     # Get the results from the futures as they complete
     for future in futures:
         processed_chunks.append(future.result())
@@ -175,26 +176,3 @@ def read_csv_concurrency(
         # Concatenate all processed chunks into a single DataFrame
     df = pd.concat(processed_chunks)
     return df
-
-
-# def get_sgs_data(df: pd.DataFrame) -> pd.DataFrame:
-#     sgs_recorded_points = []
-#     st.write("debug")
-#     for i in range(1, len(df)):
-#         if abs(df["pressure"].iloc[i] - df["pressure"].iloc[i - 1] < 0.01):
-#             last_stable_point = {
-#                 "time": df["date_time_corrected"].iloc[i - 1],
-#                 "pressure": df["pressure"].iloc[i - 1],
-#             }
-#             sgs_recorded_points.append(last_stable_point)
-#     df = pd.DataFrame(sgs_recorded_points)
-#     return df
-
-
-# def get_sgs_data_std(
-#     df: pd.DataFrame, threshold: float, no_steps: int
-# ) -> Tuple[pd.DataFrame, int]:
-#     stable_periods = df[df["pressure"].diff(no_steps).abs() < threshold]
-#     sgs_df = stable_periods[["date_time_corrected", "pressure"]]
-#     length = sgs_df.shape[0]
-#     return sgs_df, length

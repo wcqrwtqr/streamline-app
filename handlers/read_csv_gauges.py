@@ -1,7 +1,33 @@
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple, List
+
 import streamlit as st
+
+date_formats_all_options = [
+    "%m-%d-%y %H:%M:%S",
+    "%m-%d-%Y %H:%M:%S",
+    "%m/%d/%y %H:%M:%S",
+    "%m/%d/%Y %H:%M:%S",
+    "%d-%m-%y %H:%M:%S",
+    "%d-%m-%Y %H:%M:%S",
+    "%d/%m/%y %H:%M:%S",
+    "%d/%m/%Y %H:%M:%S",
+    "%d-%b-%y %H:%M:%S",
+    "%d-%b-%Y %H:%M:%S",
+    "%d/%b/%y %H:%M:%S",
+    "%d/%b/%Y %H:%M:%S",
+    "%b/%d/%y %H:%M:%S",
+    "%b/%d/%Y %H:%M:%S",
+    "%b-%d-%y %H:%M:%S",
+    "%b-%d-%Y %H:%M:%S",
+    "%d-%b-%y %I:%M:%S %p",
+    "%m-%d-%Y %I:%M:%S %p",
+    "%m/%d/%Y %I:%M:%S %p",
+    "%d/%m/%Y %I:%M:%S %p",
+    "%d-%m-%Y %I:%M:%S %p",
+    "%d/%b/%y %I:%M:%S %p",
+]
 
 
 def compute_statistics_df(df: pd.DataFrame) -> pd.DataFrame:
@@ -14,6 +40,11 @@ def compute_statistics_df(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def sep_and_names_modified(data_type: str) -> Tuple[str, List[str]]:
+    """' This function is needed to select the separation and colum names
+    for the type of gauges we use, so in case I want to add a new gauge
+    then I can add a new case and add the name of the gauge.
+    The function return the separator and column names
+    """
     match data_type:
         case "metrolog":
             sep = "[,\t]"
@@ -21,12 +52,11 @@ def sep_and_names_modified(data_type: str) -> Tuple[str, List[str]]:
         case "spartek":
             sep = r"\s+"
             names = ["date", "time", "AMPM", "elpse", "pressure", "temperature"]
-        case "kuster": 
-            sep = None,
+        case "kuster":
+            sep = (None,)
             names = ["date", "time", "pressure", "temperature"]
         case _:
             raise ValueError(f"Unknown data type: {data_type}")
-
     return sep, names
 
 
@@ -42,18 +72,14 @@ def sep_and_names(is_spartek: bool) -> Tuple[str, List[str]]:
 
 
 def drop_and_make_datetime(df: pd.DataFrame, is_spartek: bool) -> pd.DataFrame:
+    """This function is used to take the dataframe, and create the date_time
+    column by combine the time and date columns form the type of gauges
+    Now, this code support spartek and metrolog only.
+    Retrun a dataframe
+    """
     if is_spartek:
         df["date_time"] = df["date"] + " " + df["time"] + " " + df["AMPM"]
-        date_formats = [
-            "%d-%b-%y %I:%M:%S %p",
-            "%m-%d-%Y %I:%M:%S %p",
-            "%m/%d/%Y %I:%M:%S %p",
-            "%d/%m/%Y %I:%M:%S %p",
-            "%d-%m-%Y %I:%M:%S %p",
-            "%d/%b/%y %I:%M:%S %p",
-        ]
-
-        for date_format in date_formats:
+        for date_format in date_formats_all_options:
             try:
                 df["date_time_corrected"] = pd.to_datetime(
                     df["date_time"],
@@ -64,21 +90,10 @@ def drop_and_make_datetime(df: pd.DataFrame, is_spartek: bool) -> pd.DataFrame:
             except ValueError:
                 # If parsing fails, try the next format
                 continue
-
         df = df.drop(columns=["date", "time", "AMPM", "date_time"])
     else:
         df["date_time"] = df["date"] + " " + df["time"]
-
-        date_formats = [
-            "%d-%m-%y %H:%M:%S",
-            "%d/%m/%y %H:%M:%S",
-            "%m-%d-%y %H:%M:%S",
-            "%m/%d/%y %H:%M:%S",
-            "%d-%b-%y %H:%M:%S",
-            "%b/%d/%y %H:%M:%S",
-        ]
-
-        for date_format in date_formats:
+        for date_format in date_formats_all_options:
             try:
                 df["date_time_corrected"] = pd.to_datetime(
                     df["date_time"],
@@ -89,12 +104,16 @@ def drop_and_make_datetime(df: pd.DataFrame, is_spartek: bool) -> pd.DataFrame:
             except ValueError:
                 # If parsing fails, try the next format
                 continue
-
         df = df.drop(columns=["date", "time", "date_time"])
     return df
 
 
 def read_csv_standard(source_file: str, row: int, is_spartek=False) -> pd.DataFrame:
+    """This code used to load the data fro the spartek and metrolog
+    only but can not be used for other guagues like kuster, so I made
+    another code for kuster gauges alone
+    Retruns dataframe
+    """
     sep, names = sep_and_names(is_spartek)
     df = pd.read_csv(
         source_file,
@@ -124,6 +143,12 @@ def read_csv_standard_kuster(source_file: str, row: int, kind: str) -> pd.DataFr
     df["date_time"] = df["date"] + " " + df["time"]
     return df
 
+
+# The below code I've made earlier so I can be able to load data
+# with big/huge numbers so it can use better and efficent loading
+# of data, but later I did not use it.
+
+
 def read_csv_chunck(
     source_file: str, row: int, is_spartek=False, chunk_size=10_000
 ) -> pd.DataFrame:
@@ -141,7 +166,8 @@ def read_csv_chunck(
 
     for chunk in chunk_generator:
         # Your processing code here
-        # For example, you can concatenate the date and time columns and convert them to datetime
+        # For example, you can concatenate the date and time columns and
+        # convert them to datetime
         if not is_spartek:
             chunk["date_time_corrected"] = pd.to_datetime(
                 chunk["date"] + " " + chunk["time"], format="%d-%m-%y %H:%M:%S"
@@ -182,7 +208,8 @@ def read_csv_concurrency(
     # Function to process each chunk
     def process_chunk(chunk):
         # Your processing code here
-        # For example, you can concatenate the date and time columns and convert them to datetime
+        # For example, you can concatenate the date and time columns and
+        # convert them to datetime
         if not is_spartek:
             chunk["date_time_corrected"] = pd.to_datetime(
                 chunk["date"] + " " + chunk["time"],
@@ -207,26 +234,3 @@ def read_csv_concurrency(
         # Concatenate all processed chunks into a single DataFrame
     df = pd.concat(processed_chunks)
     return df
-
-
-# def get_sgs_data(df: pd.DataFrame) -> pd.DataFrame:
-#     sgs_recorded_points = []
-#     st.write("debug")
-#     for i in range(1, len(df)):
-#         if abs(df["pressure"].iloc[i] - df["pressure"].iloc[i - 1] < 0.01):
-#             last_stable_point = {
-#                 "time": df["date_time_corrected"].iloc[i - 1],
-#                 "pressure": df["pressure"].iloc[i - 1],
-#             }
-#             sgs_recorded_points.append(last_stable_point)
-#     df = pd.DataFrame(sgs_recorded_points)
-#     return df
-
-
-# def get_sgs_data_std(
-#     df: pd.DataFrame, threshold: float, no_steps: int
-# ) -> Tuple[pd.DataFrame, int]:
-#     stable_periods = df[df["pressure"].diff(no_steps).abs() < threshold]
-#     sgs_df = stable_periods[["date_time_corrected", "pressure"]]
-#     length = sgs_df.shape[0]
-#     return sgs_df, length

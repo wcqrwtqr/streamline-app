@@ -6,6 +6,7 @@ import os
 
 package_dir = os.path.dirname(os.path.abspath(__file__))
 
+
 def plt_las_page():
     st.title("PLT las file 🌡")
     st.markdown(
@@ -20,7 +21,8 @@ def plt_las_page():
             "Ensure the file is .las extenstion"
         )
         try:
-            image = Image.open(os.path.join(package_dir, "../Thumbnail/spartek.jpg"))
+            image = Image.open(os.path.join(
+                package_dir, "../Thumbnail/spartek.jpg"))
             st.image(image)
         except FileNotFoundError:
             st.error("Image not found at path: " + image)

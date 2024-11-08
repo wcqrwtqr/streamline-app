@@ -7,15 +7,21 @@ import streamlit as st
 
 
 def graph_template(df: pd.DataFrame, st: st, label: str, y1: str, y2: str):
-    # Template for the arg function which accept any number of arguments
-    # It might have some performance issues when dealing with big data
+    """Template for the arg function which accept any number of arguments
+    It might have some performance issues when dealing with big data
+    """
     with st.expander(label=label):
         graphing_line_arg(df, "date_time_corrected", st, [y1, y2])
 
 
 def graph_template_v2(
     # This function is to use the normal v2 function which is more efficient
-    df: pd.DataFrame, st: st, label: str, xval: str, val1: str, val2: str
+    df: pd.DataFrame,
+    st: st,
+    label: str,
+    xval: str,
+    val1: str,
+    val2: str,
 ):
     with st.expander(label=label):
         val = graphing_line_2v(df, xval, val1, val2)
@@ -43,9 +49,7 @@ def make_graphs_optimized(df: pd.DataFrame, st: st) -> None:
 def make_graphs(df: pd.DataFrame, st: st):
     # Use futures to make the graph of the gauges data
     # This is useful for big data values
-
     futures = []
-
     for data_to_graph in data_to_graphs:
         with concurrent.futures.ThreadPoolExecutor() as executor:
             # Submit tasks for each graph
@@ -61,7 +65,6 @@ def make_graphs(df: pd.DataFrame, st: st):
                     )
                 )
             )
-
     # Wait for all tasks to complete
     # concurrent.futures.wait(futures)
     return futures

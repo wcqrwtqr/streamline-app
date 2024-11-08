@@ -17,28 +17,14 @@ def gauges_kuster_page():
             further analysis or processing.
                 """
     )
-    with st.expander(label="Upload row data guidelines"):
-        st.warning(
-            "Ensure the txt file belongs to kuster gauges and has the format as below"
-        )
-        try:
-            image = Image.open(os.path.join(package_dir, "../Thumbnail/spartek.jpg"))
-            st.image(image)
-        except FileNotFoundError:
-            st.error("Image not found at path: " + image)
     source_data_bottom = st.file_uploader(
-        label="Uplaod bottom gauge data to web page", type=["csv", "log", "txt"],
+        label="Uplaod bottom gauge data to web page", type=["csv", "txt"],
         key="file_bottom_unique"
     )
-    # source_data_top = st.file_uploader(
-    #     label="Uplaod top gauge data to web page", type=["csv", "log", "txt"],
-    #     key="file_top_unique"
-    # )
     st.write("---")
     try:
         # Execute the program
         Gauges_data_kuster(source_data_bottom)
-        # Gauges_data_kuster(source_data_top)
     except Exception as e:
         st.write("An error occured:" + str(e))
 
@@ -57,7 +43,8 @@ def gauges_spartek_page():
             "Ensure the txt file belongs to Spartek gauges and has the format as below"
         )
         try:
-            image = Image.open(os.path.join(package_dir, "../Thumbnail/spartek.jpg"))
+            image = Image.open(os.path.join(
+                package_dir, "../Thumbnail/spartek.jpg"))
             st.image(image)
         except FileNotFoundError:
             st.error("Image not found at path: " + image)
