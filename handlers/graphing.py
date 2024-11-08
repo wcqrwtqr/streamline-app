@@ -49,7 +49,9 @@ def graphing_line_2v(df: pd.DataFrame, x: str, ym: str, ys: str):
     fig_n.update_xaxes(title_text=x)
     fig_n.update_yaxes(title_text=ym, secondary_y=False)
     fig_n.update_yaxes(title_text=ys, secondary_y=True)
-    fig_n.add_trace(go.Scatter(x=xt, y=yp, mode="lines", name=ym), secondary_y=False)
-    fig_n.add_trace(go.Scatter(x=xt, y=yt, mode="lines", name=ys), secondary_y=True)
+    fig_n.add_trace(go.Scatter(x=xt, y=yp, mode="lines",
+                    name=ym), secondary_y=False)
+    fig_n.add_trace(go.Scatter(x=xt, y=yt, mode="lines",
+                    name=ys), secondary_y=True)
 
     return fig_n
