@@ -1,22 +1,13 @@
-# import pandas as pd
 import streamlit as st
-
-# from typing import Dict, List
 from handlers.make_graphs import (
     make_graphs,
-    # make_graphs_optimized,
     data_stats_for_gaguges,
 )
 from handlers.read_csv_gauges import (
     read_csv_standard,
-    # read_csv_chunck,
-    # read_csv_concurrency,
     compute_statistics_df,
 )
 import time
-
-# from helpers.handlers.derived_pressure import calc_derivative_np
-# from concurrent.futures import ThreadPoolExecutor
 
 
 @st.cache_data
@@ -35,23 +26,16 @@ def load_df_metorlog(source_file, row: int):
     start_time = time.time()
 
     df = read_csv_standard(source_file, row, is_spartek=False)
-    # df = read_csv_chunck(source_file, row, is_spartek=False)
-    # df = read_csv_concurrency(source_file, row, is_spartek=False)
 
     end_time_loaded = time.time()
     execution_time_loaded = end_time_loaded - start_time
-
-    # st.write(df.head())
     df = compute_statistics_df(df)
-
     end_time_statistics = time.time()
     execution_time_statistics = end_time_statistics - start_time
-
     st.success(
         f"Done ... Load csv file took {execution_time_loaded:.2f} sec , \
         statistics took {execution_time_statistics:.2f} sec"
     )
-
     range_data = df.index.tolist()
     return df, range_data
 
@@ -77,7 +61,6 @@ def Gauges_data_Metrolog(source_file, row=20):
 
     # Creating the masked df from the index
     df_lst = df[range_data_selection[0] : range_data_selection[1]]
-    # Showing the graphs
 
     # Make the stats of min and max in the function below
     data_stats_for_gaguges(df_lst)

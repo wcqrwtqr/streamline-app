@@ -1,7 +1,3 @@
-# import pandas as np
-# import pandas as pd
-
-
 # Averages calculation columns names
 avg_columns: list[str] = [
     "Pressure",

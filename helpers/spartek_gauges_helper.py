@@ -4,15 +4,10 @@ from typing import List, Tuple
 from handlers.make_graphs import (
     make_graphs,
     data_stats_for_gaguges,
-    # make_graphs_optimized,
 )
 from handlers.read_csv_gauges import (
     read_csv_standard,
     compute_statistics_df,
-    # read_csv_chunck,
-    # read_csv_concurrency,
-    # get_sgs_data,
-    # get_sgs_data_std,
 )
 import time
 
@@ -83,7 +78,6 @@ def Gauges_data_Spartek(source_file, row=20):
     execution_time_draw = end_time_draw - start_time
 
     make_graphs(df_lst, st)
-    # make_graphs_optimized(df_lst, st)
 
     end_time_graphing = time.time()
     execution_time_graphing = end_time_graphing - start_time

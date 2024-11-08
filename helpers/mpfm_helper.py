@@ -13,7 +13,6 @@ def calculate_averages(df: pd.DataFrame, columns: List[str]) -> Dict[str, float]
 
 
 def mpfm_data(source_file: str):
-
     df = pd.read_csv(source_file, sep="\t")
     df.dropna(inplace=True, axis=1)
 
@@ -36,7 +35,7 @@ def mpfm_data(source_file: str):
         "Choose the data for the csv export", header_list, header_list[:-12]
     )
 
-    df_lst: pd.DataFrame = df[range_data_selection[0]: range_data_selection[1]]
+    df_lst: pd.DataFrame = df[range_data_selection[0] : range_data_selection[1]]
     df_lst2: pd.DataFrame = df_lst[df_header]
 
     # Calculate averages of the data frame (all columns mentioned in the function)
@@ -101,16 +100,14 @@ def mpfm_data(source_file: str):
     )
     graphing_line_arg(df_lst, "date_time", tab1, ["Pressure", "dP"])
     graphing_line_arg(df_lst, "date_time", tab2, ["Pressure", "Temperature"])
-    graphing_line_arg(df_lst, "date_time", tab3, [
-                      "Std.OilFlowrate", "GOR(std)"])
+    graphing_line_arg(df_lst, "date_time", tab3, ["Std.OilFlowrate", "GOR(std)"])
     graphing_line_arg(
         df_lst,
         "date_time",
         tab4,
         ["Std.OilFlowrate", "Std.GasFlowrate", "WaterFlowrate"],
     )
-    graphing_line_arg(df_lst, "date_time", tab5, [
-                      "WaterFlowrate", "Std.Watercut"])
+    graphing_line_arg(df_lst, "date_time", tab5, ["WaterFlowrate", "Std.Watercut"])
 
     # Showing the data set with the needed columns
     with st.expander(label="Data Set"):
