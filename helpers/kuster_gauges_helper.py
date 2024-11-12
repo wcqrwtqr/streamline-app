@@ -36,12 +36,12 @@ date_formats_all_options = [
 ]
 
 
-def row_counting(source_file: str) -> int:
-    row_count: int = 0
-    with open(source_file, "r") as f:
-        for line in f:
-            row_count += 1
-    return row_count
+# def row_counting(source_file: str) -> int:
+#     row_count: int = 0
+#     with open(source_file, "r") as f:
+#         for line in f:
+#             row_count += 1
+#     return row_count
 
 
 @st.cache_data
@@ -87,10 +87,10 @@ def load_df_kuster(source_file: str, row: int) -> Tuple[pd.DataFrame, List[int]]
 
 
 def Gauges_data_kuster(source_file, row=20):
-    """
+    '''
     This function accept the txt file and make the streamlit
     graph for kuster gauges data
-    """
+    '''
     # Load data to df
     df, range_data = load_df_kuster(source_file, row)
     range_data_selection = st.slider(

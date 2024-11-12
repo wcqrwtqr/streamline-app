@@ -12,16 +12,18 @@ from utils.gauges_page import (
     gauges_kuster_page,
 )
 from utils.plt_las import plt_las_page
-
+# from utils.md_tvd import md_tvd_page
+from utils.md_tvd import md_tvd_page
 
 if __name__ == "__main__":
     # Make the pages here in a Dict
     page_name_to_func = {
         "Intro Page": intro,
         "Gauges Kuster": gauges_kuster_page,
-        "MPFM": mpfm_page,
         "Gauges Spartek": gauges_spartek_page,
         "Gauges Metrolog": gauges_metrolog_page,
+        "MD -> TVD": md_tvd_page,
+        "MPFM": mpfm_page,
         "Air Supply": air_compressor_page,
         "PVT": pvt_page,
         "Simulation": simulation_page,
