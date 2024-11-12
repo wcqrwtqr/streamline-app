@@ -2,12 +2,13 @@ import streamlit as st
 from helpers.plt_las_helper import graph_las_data
 from PIL import Image
 import os
-
+import tempfile
 
 package_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def plt_las_page():
+    """Read las files for the PLT data."""
     st.title("PLT las file 🌡")
     st.markdown(
         """
@@ -31,6 +32,10 @@ def plt_las_page():
     )
     try:
         # Execute the program
-        graph_las_data(source_data.name)
+        # Save the uploaded file temporarily
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(source_data.read())
+            tmp_file_path = tmp_file.name
+        graph_las_data(tmp_file.name)
     except Exception as e:
         st.write("An error occured:" + str(e))
