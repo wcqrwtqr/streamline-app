@@ -38,7 +38,7 @@ def md_tvd_page():
         # Data to DataFrame and Save
         result_df = pd.DataFrame({"MD": md_input, "TVD": tvd_output_rounded})
         result_df.dropna(inplace=True)
-        result_df.to_csv(out_put_file_path, index=False)
+        # result_df.to_csv(out_put_file_path, index=False)
 
         # Display Output
         st.write("Depth Survey Results", result_df)

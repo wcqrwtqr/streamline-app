@@ -12,7 +12,6 @@ from utils.gauges_page import (
     gauges_kuster_page,
 )
 from utils.plt_las import plt_las_page
-# from utils.md_tvd import md_tvd_page
 from utils.md_tvd import md_tvd_page
 
 if __name__ == "__main__":
@@ -20,16 +19,16 @@ if __name__ == "__main__":
     page_name_to_func = {
         "Intro Page": intro,
         "Gauges Kuster": gauges_kuster_page,
+        "MD -> TVD": md_tvd_page,
+        "PLT las": plt_las_page,
         "Gauges Spartek": gauges_spartek_page,
         "Gauges Metrolog": gauges_metrolog_page,
-        "MD -> TVD": md_tvd_page,
         "MPFM": mpfm_page,
         "Air Supply": air_compressor_page,
+        "Conversion": conversion_page,
         "PVT": pvt_page,
         "Simulation": simulation_page,
         "Nodal": nodal_page,
-        "Conversion": conversion_page,
-        "PLT las": plt_las_page,
     }
     # Get the string of pages
     page_name = st.sidebar.selectbox("Choose page", page_name_to_func.keys())

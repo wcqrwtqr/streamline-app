@@ -8,13 +8,15 @@ st.set_page_config(layout="wide")
 
 
 def graphing_las_log_arg(df: pd.DataFrame, st=st, *args):
-    """
-    Make graph for the las file with all the data to be graphed by selecting
-    the all the needed columns
-    """
+    """Make graph for the las file with all the data to be graphed by selecting\
+    the all the needed columns."""
     for arg in args:
         # Create a subplot with secondary y-axis (for depth/time)
         fig_n = make_subplots(specs=[[{"secondary_y": True}]])
+        fig_n.update_layout(
+            title_text=f"{arg} and {arg} Graph",
+            hovermode="y unified",  # Enables crosshair line for hover
+        )
 
         my_string = " , ".join(arg) + " Plot"
         fig_n.update_layout(title_text=my_string)
@@ -26,23 +28,13 @@ def graphing_las_log_arg(df: pd.DataFrame, st=st, *args):
         fig_n.update_yaxes(title_text="TIME", autorange="reversed")
 
         for idx, col in enumerate(arg):
-            # secondary = idx % 2 == 1  # Determine if it's a secondary
-            # axis or not
 
             # Add the trace with x and y flipped for a vertical plot
             fig_n.add_trace(
                 go.Scatter(x=df[col], y=df.index, mode="lines", name=col),
-                # secondary_y=secondary  # Assign to primary or secondary
-                # y-axis
             )
             # Set x-axis titles based on the column being plotted
             fig_n.update_xaxes(title_text=col)  # For primary x-axis
-            # if not secondary:
-            #     fig_n.update_xaxes(title_text=col, row=1, col=1)  # For primary x-axis
-            #     # fig_n.update_xaxes(title_text=col)  # For primary x-axis
-            # else:
-            #     fig_n.update_xaxes(title_text=col, row=1, col=1)  # For secondary x-axis
-            #     # fig_n.update_xaxes(title_text=col)  # For secondary x-axis
 
         if arg:
             st.plotly_chart(fig_n)
@@ -52,10 +44,7 @@ def graphing_las_log_arg(df: pd.DataFrame, st=st, *args):
 
 @st.cache_data
 def load_df_las(source_file):
-    """
-    Load the las file to dataframe
-    using lasio
-    """
+    """Load the las file to dataframe using lasio."""
     las = lasio.read(source_file)
     df = las.df()
     range_data = df.index.tolist()
@@ -65,10 +54,8 @@ def load_df_las(source_file):
 
 
 def graph_las_data(source_file):
-    """
-    This function accept the las file and make the streamlit
-    calculcation
-    """
+    """This function accept the las file and make the streamlit\
+    calculcation."""
     df, range_data, las_columns = load_df_las(source_file)
     range_data_selection = st.slider(
         "Range:",
@@ -83,7 +70,6 @@ def graph_las_data(source_file):
 
     with st.expander(label="Graph las file"):
         col1, col2, col3, col4 = st.columns(4)
-
         with col1:
             columns_selector = st.multiselect("select header 1", las_columns)
             graphing_las_log_arg(df_lst, st, columns_selector)
@@ -97,5 +83,8 @@ def graph_las_data(source_file):
             columns_selector = st.multiselect("select header 4", las_columns)
             graphing_las_log_arg(df_lst, st, columns_selector)
 
+    with st.expander(label="Graph las"):
+        columns_selector = st.multiselect("select header", las_columns)
+        graphing_las_log_arg(df_lst, st, columns_selector)
     with st.expander(label="Table of las data"):
         st.dataframe(df_lst)

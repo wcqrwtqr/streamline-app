@@ -5,10 +5,16 @@ from helpers.kuster_gauges_helper import Gauges_data_kuster
 from PIL import Image
 import os
 
+
 package_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def gauges_kuster_page():
+    """Read the data from kuster gauges over txt files and plot them.
+
+    This function does not accept any parameters and excute
+    a gauges data.
+    """
     st.title("Down Hole Gauges _Kuster_ 🌡")
     st.markdown(
         """

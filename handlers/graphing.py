@@ -5,9 +5,8 @@ from plotly.subplots import make_subplots
 
 
 def graphing_line_arg(df: pd.DataFrame, x: str, st=st, *args):
-    # Old code I made to make the graphing of the data with args so I can
-    # add as much as I want of graph values from the DataFrame
-
+    """Old code I made to make the graphing of the data with args\
+    so I can add as much as I want of graph values from the DataFrame."""
     for arg in args:
         fig_n = make_subplots(specs=[[{"secondary_y": True}]])
         my_string = " , ".join(arg) + " Graph"
@@ -32,8 +31,9 @@ def graphing_line_arg(df: pd.DataFrame, x: str, st=st, *args):
 
 
 def graphing_line_2v(df: pd.DataFrame, x: str, ym: str, ys: str):
-    # Graphing code that can graph the values from the DataFrame for two axes
-    # only and can by used and called serveral time as much as you need
+    """Graphing code that can graph the values from the DataFrame\
+    for two axes only and can by used and called serveral time as\
+    much as you need."""
     xt = df[x]
     yp = df[ym]
     yt = df[ys]

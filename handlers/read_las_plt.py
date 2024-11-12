@@ -1,17 +1,6 @@
-import lasio
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple, List
-import streamlit as st
-
-
-def compute_statistics_df(df: pd.DataFrame) -> pd.DataFrame:
-    # Compute all the statistics data for the dataframe
-    df["time_diff"] = df["date_time_corrected"].diff().dt.seconds
-    df["pressure_diff"] = df["pressure"].diff()
-    df["temperature_diff"] = df["temperature"].diff()
-    df["1st_derivative"] = (df["pressure_diff"] / df["time_diff"]) * 100
-    return df
 
 
 def sep_and_names(is_spartek: bool) -> Tuple[str, List[str]]:
