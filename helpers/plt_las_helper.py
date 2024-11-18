@@ -47,6 +47,7 @@ def load_df_las(source_file):
     """Load the las file to dataframe using lasio."""
     las = lasio.read(source_file)
     df = las.df()
+    # st.dataframe(df.head())
     range_data = df.index.tolist()
     las_columns = df.columns
 
@@ -54,7 +55,7 @@ def load_df_las(source_file):
 
 
 def graph_las_data(source_file):
-    """This function accept the las file and make the streamlit\
+    """Read accept the las file and make the streamlit\
     calculcation."""
     df, range_data, las_columns = load_df_las(source_file)
     range_data_selection = st.slider(
@@ -63,6 +64,7 @@ def graph_las_data(source_file):
         max_value=max(range_data),
         value=(min(range_data), max(range_data)),
     )
+    st.write("debug")
     # Creating the masked df from the index
     df_lst = df[range_data_selection[0]: range_data_selection[1]]
     with st.expander(label="Averages"):

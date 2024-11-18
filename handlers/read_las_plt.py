@@ -1,5 +1,4 @@
 import pandas as pd
-from concurrent.futures import ThreadPoolExecutor
 from typing import Tuple, List
 
 
@@ -78,90 +77,4 @@ def read_csv_standard(source_file: str, row: int, is_spartek=False) -> pd.DataFr
         engine="python",
     )
     df = drop_and_make_datetime(df, is_spartek)
-    return df
-
-
-def read_csv_chunck(
-    source_file: str, row: int, is_spartek=False, chunk_size=10_000
-) -> pd.DataFrame:
-    sep, names = sep_and_names(is_spartek)
-    df = pd.DataFrame()
-    chunk_generator = pd.read_csv(
-        source_file,
-        skiprows=row,
-        header=None,
-        sep=sep,
-        names=names,
-        chunksize=chunk_size,
-        engine="python",
-    )
-
-    for chunk in chunk_generator:
-        # Your processing code here
-        # For example, you can concatenate the date and time columns and convert them to datetime
-        if not is_spartek:
-            chunk["date_time_corrected"] = pd.to_datetime(
-                chunk["date"] + " " + chunk["time"], format="%d-%m-%y %H:%M:%S"
-            )
-            df = pd.concat([df, chunk])
-        else:
-            chunk["date_time_corrected"] = pd.to_datetime(
-                chunk["date"] + " " + chunk["time"] + " " + chunk["AMPM"],
-                format="%d-%b-%y %I:%M:%S %p",
-            )
-            df = pd.concat([df, chunk])
-
-    df = drop_and_make_datetime(df, is_spartek)
-
-    return df
-
-
-def read_csv_concurrency(
-    source_file: str, row: int, is_spartek=False, chunk_size=10_000
-) -> pd.DataFrame:
-    chunk_size = chunk_size  # Specify the chunk size
-    sep, names = sep_and_names(is_spartek)
-
-    # Initialize an empty list to store the processed chunks
-    processed_chunks = []
-
-    # Define a generator to iterate over chunks of the CSV file
-    chunk_generator = pd.read_csv(
-        source_file,
-        skiprows=row,
-        sep=sep,
-        header=None,
-        names=names,
-        chunksize=chunk_size,
-        engine="python",
-    )
-
-    # Function to process each chunk
-    def process_chunk(chunk):
-        # Your processing code here
-        # For example, you can concatenate the date and time columns and convert them to datetime
-        if not is_spartek:
-            chunk["date_time_corrected"] = pd.to_datetime(
-                chunk["date"] + " " + chunk["time"],
-                format="%d-%m-%y %H:%M:%S",
-            )
-        else:
-            chunk["date_time_corrected"] = pd.to_datetime(
-                chunk["date"] + " " + chunk["time"] + " " + chunk["AMPM"],
-                format="%d-%b-%y %I:%M:%S %p",
-            )
-        # Append the processed chunk to the list
-        return chunk
-
-    # Process each chunk in parallel using ThreadPoolExecutor
-    with ThreadPoolExecutor() as executor:
-        # Submit processing tasks for each chunk and store the futures
-        futures = [executor.submit(process_chunk, chunk)
-                   for chunk in chunk_generator]
-    # Get the results from the futures as they complete
-    for future in futures:
-        processed_chunks.append(future.result())
-
-        # Concatenate all processed chunks into a single DataFrame
-    df = pd.concat(processed_chunks)
     return df

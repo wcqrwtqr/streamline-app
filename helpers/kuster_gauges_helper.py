@@ -10,6 +10,7 @@ from handlers.read_csv_gauges import (
 )
 import time
 
+
 date_formats_all_options = [
     "%m-%d-%y %H:%M:%S",
     "%m-%d-%Y %H:%M:%S",

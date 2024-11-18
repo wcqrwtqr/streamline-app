@@ -8,6 +8,7 @@ import os
 
 package_dir = os.path.dirname(os.path.abspath(__file__))
 
+st.set_page_config(layout="wide")
 
 def gauges_kuster_page():
     """Read the data from kuster gauges over txt files and plot them.

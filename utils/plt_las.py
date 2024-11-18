@@ -39,3 +39,28 @@ def plt_las_page():
         graph_las_data(tmp_file.name)
     except Exception as e:
         st.write("An error occured:" + str(e))
+
+
+
+def kuster_las_page():
+    """Read las files for the kuster gauges."""
+    st.title("Kuster las file 🌡")
+    st.markdown(
+        """
+        Quickly and easily manipulate the data from __Kuster__ Down Hole Memory Gauges \
+        with our provided tool. View the data on the page or download it to Excel for \
+            further analysis or processing.
+                """
+    )
+    source_data = st.file_uploader(
+        label="Uplaod kuster plt data to web page", type="las"
+    )
+    try:
+        # Execute the program
+        # Save the uploaded file temporarily
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(source_data.read())
+            tmp_file_path = tmp_file.name
+        graph_las_data(tmp_file.name)
+    except Exception as e:
+        st.write("An error occured:" + str(e))
