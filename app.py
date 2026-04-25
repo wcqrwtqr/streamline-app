@@ -2,7 +2,10 @@ import streamlit as st
 from utils.intro import intro
 from utils.mpfm_page import mpfm_page
 from utils.air_compressor_page import air_compressor_page
+from utils.sgs_tempate_geneator import generate_sgs_page
+from utils.depth_page import depth_goes_page
 from utils.pvt_page import pvt_page
+from utils.horner_page import horner_page
 from utils.simulation_page import simulation_page
 from utils.nodal_page import nodal_page
 from utils.conversion_page import conversion_page
@@ -29,6 +32,9 @@ if __name__ == "__main__":
         "PVT": pvt_page,
         "Simulation": simulation_page,
         "Nodal": nodal_page,
+        "Depth Meter": depth_goes_page,
+        "Horner Plot": horner_page,
+        "SGS Report": generate_sgs_page,
     }
     # Get the string of pages
     page_name = st.sidebar.selectbox("Choose page", page_name_to_func.keys())

@@ -18,28 +18,22 @@ def plt_las_page():
                 """
     )
     with st.expander(label="Upload row data guidelines"):
-        st.warning(
-            "Ensure the file is .las extenstion"
-        )
+        st.warning("Ensure the file is .las extenstion")
         try:
-            image = Image.open(os.path.join(
-                package_dir, "../Thumbnail/spartek.jpg"))
+            image = Image.open(os.path.join(package_dir, "../Thumbnail/spartek.jpg"))
             st.image(image)
         except FileNotFoundError:
             st.error("Image not found at path: " + image)
-    source_data = st.file_uploader(
-        label="Uplaod plt data to web page", type="las"
-    )
+    source_data = st.file_uploader(label="Uplaod plt data to web page", type="las")
     try:
         # Execute the program
         # Save the uploaded file temporarily
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             tmp_file.write(source_data.read())
-            tmp_file_path = tmp_file.name
+            # tmp_file_path = tmp_file.name
         graph_las_data(tmp_file.name)
     except Exception as e:
         st.write("An error occured:" + str(e))
-
 
 
 def kuster_las_page():
@@ -60,7 +54,7 @@ def kuster_las_page():
         # Save the uploaded file temporarily
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             tmp_file.write(source_data.read())
-            tmp_file_path = tmp_file.name
+            # tmp_file_path = tmp_file.name
         graph_las_data(tmp_file.name)
     except Exception as e:
         st.write("An error occured:" + str(e))
